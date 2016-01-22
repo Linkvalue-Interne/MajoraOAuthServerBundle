@@ -20,7 +20,16 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('majora_oauth_server');
 
-        $rootNode->end();
+        $rootNode->children()
+            ->arrayNode('storage')
+                ->children()
+                    ->scalarNode('access_token')->cannotBeEmpty()->end()
+                    ->scalarNode('auth_code')->cannotBeEmpty()->end()
+                    ->scalarNode('client')->cannotBeEmpty()->end()
+                    ->scalarNode('refresh_token')->cannotBeEmpty()->end()
+                ->end()
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }
