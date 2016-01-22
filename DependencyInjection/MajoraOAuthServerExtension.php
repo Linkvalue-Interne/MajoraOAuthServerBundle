@@ -6,11 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class MajoraOAutServerExtension.
+ * Class MajoraOAuthServerExtension.
  *
  * @author Raphael De Freitas <raphael@de-freitas.net>
  */
-class MajoraOAutServerExtension extends Extension
+class MajoraOAuthServerExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -19,5 +19,13 @@ class MajoraOAutServerExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias()
+    {
+        return 'majora_oauth_server';
     }
 }
