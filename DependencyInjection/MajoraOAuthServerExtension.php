@@ -22,12 +22,10 @@ class MajoraOAuthServerExtension extends Extension
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getAlias()
     {
         return 'majora_oauth_server';
     }
-
-
 }
