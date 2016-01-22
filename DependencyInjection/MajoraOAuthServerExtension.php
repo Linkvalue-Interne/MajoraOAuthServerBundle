@@ -19,6 +19,7 @@ class MajoraOAuthServerExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('majora_oauth_server.config', $config);
     }
 
     /**
