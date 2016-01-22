@@ -22,11 +22,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode->children()
             ->arrayNode('storage')
+                ->isRequired()
                 ->children()
-                    ->scalarNode('access_token')->cannotBeEmpty()->end()
-                    ->scalarNode('auth_code')->cannotBeEmpty()->end()
-                    ->scalarNode('client')->cannotBeEmpty()->end()
-                    ->scalarNode('refresh_token')->cannotBeEmpty()->end()
+                    ->scalarNode('access_token')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('auth_code')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('client')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('refresh_token')->isRequired()->cannotBeEmpty()->end()
                 ->end()
             ->end()
         ->end();

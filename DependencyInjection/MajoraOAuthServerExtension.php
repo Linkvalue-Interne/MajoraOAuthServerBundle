@@ -20,4 +20,14 @@ class MajoraOAuthServerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAlias()
+    {
+        return 'majora_oauth_server';
+    }
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace Majora\OAuthServerBundle;
 
+use Majora\OAuthServerBundle\DependencyInjection\MajoraOAuthServerExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -11,4 +12,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class MajoraOAuthServerBundle extends Bundle
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->extension = new MajoraOAuthServerExtension();
+    }
 }
