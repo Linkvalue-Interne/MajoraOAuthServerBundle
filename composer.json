@@ -1,18 +1,29 @@
 {
     "name": "linkvalue/majora-oauth-server-bundle",
     "description": "",
-    "keywords": ["oauth"],
+    "keywords": ["oauth", "bundle", "server"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
             "name": "Jamal Youssefi",
             "email": "jamal.youssefi@gmail.com"
+        },
+        {
+            "name": "Raphael De Freitas",
+            "email": "raphael@de-freitas.net"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Majora\\OAuthServerBundle\\": ""
+        }
+    },
     "require": {
         "php": ">=5.6.0",
-        "symfony/framework-bundle": ">=2.8"
+        "bshaffer/oauth2-server-php": "^1.8",
+        "symfony/http-kernel": ">=2.8",
+        "symfony/dependency-injection": ">=2.8"
     },
     "minimum-stability": "dev"
 }
