@@ -3,14 +3,13 @@ services:
     oauth2.server:
         class: OAuth2\Server
         arguments:
-            - [@oauth2.storage.access_token, @oauth2.storage.client] # Storages
-            - [] # Config
-            - [@oauth2.grant_type.client_credentials] # GrantTypes
-            - [] # ResponseTypes
+            - [@oauth2.storage.access_token, @oauth2.storage.client, , @oauth2.storage.refresh_token, @oauth2.storage.user, @oauth2.storage.auth_code] # Storages
+            - {always_issue_new_refresh_token: true, refresh_token_lifetime: 1209600} # Config
+            - [@oauth2.grant_type.client_credentials, @oauth2.grant_type.refresh_token, @oauth2.grant_type.password, @oauth2.grant_type.authorization_code] # GrantTypes
+            - [@oauth2.response_type.access_token] # ResponseTypes
             - ~ # TokenType
             - ~ # Scope
             - ~ # ClientAssertionType
-
 
     # Http
     oauth2.request:
@@ -28,100 +27,24 @@ services:
         class: OAuth2\GrantType\ClientCredentials
         arguments:
             - @oauth2.storage.client
+    oauth2.grant_type.refresh_token:
+        class: OAuth2\GrantType\RefreshToken
+        arguments:
+            - @oauth2.storage.refresh_token
+            - {always_issue_new_refresh_token: true}
+    oauth2.grant_type.password:
+        class: OAuth2\GrantType\UserCredentials
+        arguments:
+            - @oauth2.storage.user
+    oauth2.grant_type.authorization_code:
+        class: OAuth2\GrantType\AuthorizationCode
+        arguments:
+            - @oauth2.storage.auth_code
 
-#parameters:
-#    oauth2.server.class: OAuth2\Server
-#    oauth2.request.class: OAuth2\HttpFoundationBridge\Request
-#    oauth2.request_factory.class: OAuth2\HttpFoundationBridge\Request
-#    oauth2.response.class: OAuth2\HttpFoundationBridge\Response
-#    oauth2.storage.client_credentials.class: OAuth2\ServerBundle\Storage\ClientCredentials
-#    oauth2.storage.access_token.class: OAuth2\ServerBundle\Storage\AccessToken
-#    oauth2.storage.authorization_code.class: OAuth2\ServerBundle\Storage\AuthorizationCode
-#    oauth2.storage.user_credentials.class: OAuth2\ServerBundle\Storage\UserCredentials
-#    oauth2.storage.refresh_token.class: OAuth2\ServerBundle\Storage\RefreshToken
-#    oauth2.storage.scope.class: OAuth2\ServerBundle\Storage\Scope
-#    oauth2.storage.public_key.class: OAuth2\Storage\Memory
-#    oauth2.grant_type.client_credentials.class: OAuth2\GrantType\ClientCredentials
-#    oauth2.grant_type.authorization_code.class: OAuth2\GrantType\AuthorizationCode
-#    oauth2.grant_type.refresh_token.class: OAuth2\GrantType\RefreshToken
-#    oauth2.grant_type.user_credentials.class: OAuth2\GrantType\UserCredentials
-#    oauth2.user_provider.class: OAuth2\ServerBundle\User\OAuth2UserProvider
-#    oauth2.client_manager.class: OAuth2\ServerBundle\Manager\ClientManager
-#    oauth2.scope_manager.class: OAuth2\ServerBundle\Manager\ScopeManager
-#    oauth2.server.config: {  }
-#
-#services:
-#    oauth2.server:
-#        class: %oauth2.server.class%
-#        arguments:
-#            - ['@oauth2.storage.client_credentials', '@oauth2.storage.access_token', '@oauth2.storage.authorization_code', '@oauth2.storage.user_credentials', '@oauth2.storage.refresh_token', '@oauth2.storage.scope', '@oauth2.storage.public_key']
-#            - '%oauth2.server.config%'
-#    oauth2.request:
-#        class: %oauth2.request.class%
-#        factory_class: OAuth2\HttpFoundationBridge\Request
-#        factory_method: createFromRequest
-#        arguments:
-#            - '@request'
-#        scope: request
-#    oauth2.response:
-#        class: %oauth2.response.class%
-#    oauth2.user_provider:
-#        class: %oauth2.user_provider.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#            - '@security.encoder_factory'
-#    oauth2.scope_manager:
-#        class: %oauth2.scope_manager.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#    oauth2.storage.client_credentials:
-#        class: %oauth2.storage.client_credentials.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#    oauth2.storage.authorization_code:
-#        class: %oauth2.storage.authorization_code.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#    oauth2.storage.user_credentials:
-#        class: %oauth2.storage.user_credentials.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#            - '@oauth2.user_provider'
-#            - '@security.encoder_factory'
-#    oauth2.storage.access_token:
-#        class: %oauth2.storage.access_token.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#    oauth2.storage.refresh_token:
-#        class: %oauth2.storage.refresh_token.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#    oauth2.storage.scope:
-#        class: %oauth2.storage.scope.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#            - '@oauth2.scope_manager'
-#    oauth2.storage.public_key:
-#        class: %oauth2.storage.public_key.class%
-#    oauth2.grant_type.client_credentials:
-#        class: %oauth2.grant_type.client_credentials.class%
-#        arguments:
-#            - '@oauth2.storage.client_credentials'
-#    oauth2.grant_type.authorization_code:
-#        class: %oauth2.grant_type.authorization_code.class%
-#        arguments:
-#            - '@oauth2.storage.authorization_code'
-#    oauth2.grant_type.user_credentials:
-#        class: %oauth2.grant_type.user_credentials.class%
-#        arguments:
-#            - '@oauth2.storage.user_credentials'
-#    oauth2.grant_type.refresh_token:
-#        class: %oauth2.grant_type.refresh_token.class%
-#        arguments:
-#            - '@oauth2.storage.refresh_token'
-#            - { always_issue_new_refresh_token: false }
-#    oauth2.client_manager:
-#        class: %oauth2.client_manager.class%
-#        arguments:
-#            - '@doctrine.orm.entity_manager'
-#            - '@oauth2.scope_manager'
+    # ResponseTypes
+    oauth2.response_type.access_token:
+        class: OAuth2\ResponseType\AccessToken
+        arguments:
+            - @oauth2.storage.access_token
+            - @oauth2.storage.refresh_token
+            - {always_issue_new_refresh_token: true, refresh_token_lifetime: 2419200} # Config

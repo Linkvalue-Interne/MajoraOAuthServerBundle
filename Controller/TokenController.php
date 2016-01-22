@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class TokenController extends Controller
 {
-    public function postAction()
+    public function postAction(\Symfony\Component\HttpFoundation\Request $sfRequest)
     {
         /** @var Server $oauthServer */
         $oauthServer = $this->get('oauth2.server');
