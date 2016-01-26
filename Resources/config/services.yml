@@ -1,0 +1,50 @@
+services:
+
+    oauth2.server:
+        class: OAuth2\Server
+        arguments:
+            - [@oauth2.storage.access_token, @oauth2.storage.client, , @oauth2.storage.refresh_token, @oauth2.storage.user, @oauth2.storage.auth_code] # Storages
+            - {always_issue_new_refresh_token: true, refresh_token_lifetime: 1209600} # Config
+            - [@oauth2.grant_type.client_credentials, @oauth2.grant_type.refresh_token, @oauth2.grant_type.password, @oauth2.grant_type.authorization_code] # GrantTypes
+            - [@oauth2.response_type.access_token] # ResponseTypes
+            - ~ # TokenType
+            - ~ # Scope
+            - ~ # ClientAssertionType
+
+    # Http
+    oauth2.request:
+        class: Majora\OAuthServerBundle\Bridge\Request
+        factory_class: Majora\OAuthServerBundle\Bridge\Request
+        factory_method: createFromRequest
+        arguments:
+            - '@request'
+        scope: request
+    oauth2.response:
+        class: Majora\OAuthServerBundle\Bridge\Response
+
+    # GrantTypes
+    oauth2.grant_type.client_credentials:
+        class: OAuth2\GrantType\ClientCredentials
+        arguments:
+            - @oauth2.storage.client
+    oauth2.grant_type.refresh_token:
+        class: OAuth2\GrantType\RefreshToken
+        arguments:
+            - @oauth2.storage.refresh_token
+            - {always_issue_new_refresh_token: true}
+    oauth2.grant_type.password:
+        class: OAuth2\GrantType\UserCredentials
+        arguments:
+            - @oauth2.storage.user
+    oauth2.grant_type.authorization_code:
+        class: OAuth2\GrantType\AuthorizationCode
+        arguments:
+            - @oauth2.storage.auth_code
+
+    # ResponseTypes
+    oauth2.response_type.access_token:
+        class: OAuth2\ResponseType\AccessToken
+        arguments:
+            - @oauth2.storage.access_token
+            - @oauth2.storage.refresh_token
+            - {always_issue_new_refresh_token: true, refresh_token_lifetime: 2419200} # Config

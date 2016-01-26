@@ -2,7 +2,9 @@
 
 namespace Majora\OAuthServerBundle;
 
+use Majora\OAuthServerBundle\DependencyInjection\CompilerPass\AliasingCompilerPass;
 use Majora\OAuthServerBundle\DependencyInjection\MajoraOAuthServerExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -18,5 +20,15 @@ class MajoraOAuthServerBundle extends Bundle
     public function __construct()
     {
         $this->extension = new MajoraOAuthServerExtension();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new AliasingCompilerPass());
     }
 }
