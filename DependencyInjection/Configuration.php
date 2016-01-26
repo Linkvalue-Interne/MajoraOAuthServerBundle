@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
                 ->isRequired()
                 ->children()
                     ->scalarNode('access_token')->isRequired()->cannotBeEmpty()->end()
-                    ->scalarNode('auth_code')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('authorization_code')->isRequired()->cannotBeEmpty()->end()
                     ->scalarNode('client')->isRequired()->cannotBeEmpty()->end()
                     ->scalarNode('refresh_token')->isRequired()->cannotBeEmpty()->end()
                     ->scalarNode('user')->isRequired()->cannotBeEmpty()->end()

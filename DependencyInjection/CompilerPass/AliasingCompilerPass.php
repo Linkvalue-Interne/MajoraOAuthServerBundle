@@ -31,7 +31,7 @@ class AliasingCompilerPass implements CompilerPassInterface
             'majora_oauth_server.storage.client' => 'oauth2.storage.client',
             'majora_oauth_server.storage.refresh_token' => 'oauth2.storage.refresh_token',
             'majora_oauth_server.storage.user' => 'oauth2.storage.user',
-            'majora_oauth_server.storage.auth_code' => 'oauth2.storage.auth_code',
+            'majora_oauth_server.storage.authorization_code' => 'oauth2.storage.authorization_code',
         ];
 
         foreach ($aliasMap as $parameter => $alias) {
