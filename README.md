@@ -6,19 +6,19 @@ Provides a lightweight, extensive and highly customizable OAuth Server as a Symf
 
 Features include :
 
-    - Domain Driven Design approch
-    - Entity models and basic implementation for authenticated accounts, applications and access tokens
-    - Full abstraction of loading / persisting entities of any kind
-    - Generic extension system of custom grant types integration
-    - Server service which grants access tokens with "password" credentials
+* Domain Driven Design approch
+* Entity models and basic implementation for authenticated accounts, applications and access tokens
+* Full abstraction of loading / persisting entities of any kind
+* Generic extension system of custom grant types integration
+* Server service which grants access tokens with "password" credentials
 
 Features to come in v2.x :
 
-    - In memory, Filer, Redis & Doctrine drivers
-    - Anonymous grant type extension
-    - Refresh token generation and grant type
+* In memory, Filer, Redis & Doctrine drivers
+* Anonymous grant type extension
+* Refresh token generation and grant type
 
-** Caution ** : this bundle purpose is to be used in REST API centric projets, not for standard web. For this purpose, we recommend [FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle), a full featured OAuth server.
+**Caution** : this bundle purpose is to be used in REST API centric projets, not for standard web. For this purpose, we recommend [FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle), a full featured OAuth server.
 
 ## Documentation
 
