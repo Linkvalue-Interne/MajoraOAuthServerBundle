@@ -18,11 +18,14 @@ Features to come in v2.x :
 * Anonymous grant type extension
 * Refresh token generation and grant type
 
+**Note** : version 2.x is totally work in progress, many classes, interfaces and services can be modified without deprecation step.
+
 **Caution** : this bundle purpose is to be used in REST API centric projets, not for standard web. For this purpose, we recommend [FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle), a full featured OAuth server.
 
 ## Documentation
 
-The source of the documentation is stored in the `src/Majora/Bundle/OAuthServerBundle/Resources/doc/` folder: [Read the Documentation for master](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/master/src/Majora/Bundle/OAuthServerBundle/Resources/doc/index.md)
+* [Read the Documentation for v1.0](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/v1.0/README.md)
+* [Read the Documentation for v2.x](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/master/src/Majora/Bundle/OAuthServerBundle/Resources/doc/index.md)
 
 ## Installation
 
