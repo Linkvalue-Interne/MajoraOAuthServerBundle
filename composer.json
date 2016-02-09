@@ -1,6 +1,6 @@
 {
-    "name": "linkvalue/majora-oauth-server-bundle",
-    "description": "",
+    "name": "majora/oauth-server-bundle",
+    "description": "Provides a lightweight, extensive and highly customizable OAuth Server as a Symfony Bundle.",
     "keywords": ["oauth", "bundle", "server"],
     "type": "symfony-bundle",
     "license": "MIT",
@@ -12,6 +12,20 @@
         {
             "name": "Raphael De Freitas",
             "email": "raphael@de-freitas.net"
+        },
+        {
+            "name":     "Quentin Cerny",
+            "email":    "quentin.cerny@gmail.com",
+            "homepage": "https://github.com/Nyxis"
+        },
+        {
+            "name": "LinkValue partners",
+            "homepage": "https://github.com/orgs/LinkValue/people"
+        },
+        {
+            "name":     "LinkValue",
+            "email":    "contact@link-value.fr",
+            "homepage": "http://link-value.fr/"
         }
     ],
     "autoload": {
