@@ -30,7 +30,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Majora\\OAuthServerBundle\\": ""
+            "Majora\\Bundle\\": "src/Majora/Bundle",
+            "Majora\\Component\\": "src/Majora/Component"
         }
     },
     "require-dev": {
