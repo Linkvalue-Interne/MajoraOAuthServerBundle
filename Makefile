@@ -10,15 +10,15 @@ update: update-composer
 #
 bin:
 	mkdir -p bin/ || /bin/true
-bin/composer:
+bin/composer: bin
 	curl -sS https://getcomposer.org/installer | php -- --install-dir=bin --filename=composer
 	chmod +x bin/composer || /bin/true
-bin/php-cs-fixer:
+bin/php-cs-fixer: bin
 	wget http://get.sensiolabs.org/php-cs-fixer.phar -O bin/php-cs-fixer
 	chmod +x bin/php-cs-fixer || /bin/true
-bin/phpunit:
+bin/phpunit: bin
 	ln -s ../vendor/phpunit/phpunit/phpunit bin/phpunit
-update-bin: bin bin/composer bin/php-cs-fixer
+update-bin: bin/composer bin/php-cs-fixer
 	./bin/composer self-update
 	php bin/php-cs-fixer self-update
 .git/hooks/pre-commit:
@@ -43,11 +43,11 @@ install-vendors: install-composer
 tests: test-phpunit-coverage
 
 test-phpunit: bin/phpunit
-	./bin/phpunit
+	./bin/phpunit src -c phpunit.xml.dist
 
 test-phpunit-coverage: bin/phpunit
 	rm -rf tests-coverage/* || /bin/true
-	./bin/phpunit --coverage-html tests-coverage
+	./bin/phpunit src -c phpunit.xml.dist --coverage-html tests-coverage
 
 #
 # CI

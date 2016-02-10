@@ -1,6 +1,6 @@
 # MajoraOAuthServerBundle
 
-[![Latest Stable Version](https://poser.pugx.org/majora/oauth-server-bundle/v/stable)](https://packagist.org/packages/majora/oauth-server-bundle) [![Total Downloads](https://poser.pugx.org/majora/oauth-server-bundle/downloads)](https://packagist.org/packages/majora/oauth-server-bundle) [![Latest Unstable Version](https://poser.pugx.org/majora/oauth-server-bundle/v/unstable)](https://packagist.org/packages/majora/oauth-server-bundle) [![License](https://poser.pugx.org/majora/oauth-server-bundle/license)](https://packagist.org/packages/majora/oauth-server-bundle)
+[![Build Status](https://travis-ci.org/LinkValue/MajoraOAuthServerBundle.svg?branch=develop)](https://travis-ci.org/LinkValue/MajoraOAuthServerBundle) [![Total Downloads](https://poser.pugx.org/majora/oauth-server-bundle/downloads)](https://packagist.org/packages/majora/oauth-server-bundle) [![Latest Stable Version](https://poser.pugx.org/majora/oauth-server-bundle/v/stable)](https://packagist.org/packages/majora/oauth-server-bundle) [![License](https://poser.pugx.org/majora/oauth-server-bundle/license)](https://packagist.org/packages/majora/oauth-server-bundle)
 
 Provides a lightweight, extensive and highly customizable OAuth Server as a Symfony Bundle.
 
