@@ -1,3 +1,0 @@
-majora_oauth_server_create_token:
-    path: /token
-    # @todo : expose only if controller registered
