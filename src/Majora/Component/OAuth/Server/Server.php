@@ -236,17 +236,19 @@ class Server
             )
         );
 
-        $this->eventDispatcher->dispatch(
-            RefreshTokenEvents::MAJORA_REFRESH_TOKEN_CREATED,
-            new RefreshTokenEvent(
-                $refreshToken = new $this->refreshTokenClassName(
-                    $application,
-                    $account,
-                    $this->refreshTokenTtl,
-                    $this->randomTokenGenerator->generate('refresh_token')
+        if (in_array('refresh_token', $application->getAllowedGrantTypes()) && in_array('refresh_token', $this->grantExtensions)) {
+            $this->eventDispatcher->dispatch(
+                RefreshTokenEvents::MAJORA_REFRESH_TOKEN_CREATED,
+                new RefreshTokenEvent(
+                    $refreshToken = new $this->refreshTokenClassName(
+                        $application,
+                        $account,
+                        $this->refreshTokenTtl,
+                        $this->randomTokenGenerator->generate('refresh_token')
+                    )
                 )
-            )
-        );
+            );
+        }
 
         return $accessToken;
     }

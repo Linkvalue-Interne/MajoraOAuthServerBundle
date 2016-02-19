@@ -53,7 +53,7 @@ class MajoraOAuthServerExtension extends Extension
         if ($container->hasDefinition('majora.oauth.grant_extension.refresh_token')) {
             $passwordExtensionDefinition = $container->getDefinition('majora.oauth.grant_extension.refresh_token');
             $passwordExtensionDefinition->replaceArgument(0, new Reference($config['account']['loader']));
-            $passwordExtensionDefinition->replaceArgument(0, new Reference($config['refresh_token']['loader']));
+            $passwordExtensionDefinition->replaceArgument(1, new Reference($config['refresh_token']['loader']));
         }
 
         // token generator
