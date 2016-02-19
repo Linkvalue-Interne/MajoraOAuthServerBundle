@@ -88,6 +88,6 @@ class AccessToken implements AccessTokenInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return array_intersect($this->account->getRoles(), $this->application->getRoles());
     }
 }
