@@ -5,7 +5,7 @@ namespace Majora\Component\OAuth\Model;
 /**
  * Interface to implement on entities used as AccessToken.
  */
-interface AccessTokenInterface
+interface AccessTokenInterface extends TokenInterface
 {
     /**
      * Access tokens default TTL.
@@ -15,10 +15,11 @@ interface AccessTokenInterface
     /**
      * Construction function.
      *
-     * @param ApplicationInterface $application
-     * @param AccountInterface     $account
-     * @param int                  $expireIn
-     * @param string|null          $hash
+     * @param ApplicationInterface       $application
+     * @param AccountInterface           $account
+     * @param int                        $expireIn
+     * @param string|null                $hash
+     * @param RefreshTokenInterface|null $refreshToken
      */
     public function __construct(
         ApplicationInterface $application,
@@ -27,41 +28,6 @@ interface AccessTokenInterface
         $hash = null,
         RefreshTokenInterface $refreshToken = null
     );
-
-    /**
-     * Returns access token hash as string.
-     *
-     * @return string
-     */
-    public function getHash();
-
-    /**
-     * Returns access token ttl in sec.
-     *
-     * @return int
-     */
-    public function getExpireIn();
-
-    /**
-     * Returns access token related account.
-     *
-     * @return AccountInterface|null
-     */
-    public function getAccount();
-
-    /**
-     * Returns access token related client.
-     *
-     * @return ApplicationInterface
-     */
-    public function getApplication();
-
-    /**
-     * Returns access token roles, compiled from Application and Account roles.
-     *
-     * @return array
-     */
-    public function getRoles();
 
     /**
      * Returns the RefreshToken
