@@ -3,7 +3,9 @@
 namespace Majora\Bundle\OAuthServerBundle\DependencyInjection;
 
 use Majora\Component\OAuth\Entity\AccessToken;
+use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
+use Majora\Component\OAuth\Model\RefreshTokenInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -58,6 +60,31 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('account')
                     ->children()
+                        ->scalarNode('loader')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('refresh_token')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('ttl')
+                            ->defaultValue(RefreshTokenInterface::DEFAULT_TTL)
+                        ->scalarNode('class')
+                            ->cannotBeEmpty()
+                            ->defaultValue(RefreshToken::class)
+                            ->validate()
+                            ->ifTrue(function ($refreshTokenClass) {
+                                return !(
+                                    class_exists($refreshTokenClass, true)
+                                    && (new \ReflectionClass($refreshTokenClass))
+                                        ->implementsInterface(RefreshTokenInterface::class)
+                                );
+                            })
+                            ->thenInvalid('Provided refresh_token configuration has to be a valid class which implements Majora\Component\OAuth\Model\RefreshTokenInterface.')
+                            ->end()
+                        ->end()
                         ->scalarNode('loader')
                             ->isRequired()
                             ->cannotBeEmpty()

@@ -30,8 +30,8 @@ class MajoraOAuthServerExtension extends Extension
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
 
         // override server default server definition
         if (!$container->hasDefinition('majora.oauth.server')) {
@@ -47,6 +47,13 @@ class MajoraOAuthServerExtension extends Extension
         if ($container->hasDefinition('majora.oauth.grant_extension.password')) {
             $passwordExtensionDefinition = $container->getDefinition('majora.oauth.grant_extension.password');
             $passwordExtensionDefinition->replaceArgument(0, new Reference($config['account']['loader']));
+        }
+
+        // refresh_token extension
+        if ($container->hasDefinition('majora.oauth.grant_extension.refresh_token')) {
+            $passwordExtensionDefinition = $container->getDefinition('majora.oauth.grant_extension.refresh_token');
+            $passwordExtensionDefinition->replaceArgument(0, new Reference($config['account']['loader']));
+            $passwordExtensionDefinition->replaceArgument(0, new Reference($config['refresh_token']['loader']));
         }
 
         // token generator
