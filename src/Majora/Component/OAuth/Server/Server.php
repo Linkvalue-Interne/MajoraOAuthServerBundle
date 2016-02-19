@@ -11,6 +11,7 @@ use Majora\Component\OAuth\Generator\RandomTokenGenerator;
 use Majora\Component\OAuth\GrantType\GrantExtensionInterface;
 use Majora\Component\OAuth\Loader\ApplicationLoaderInterface;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
+use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -136,7 +137,7 @@ class Server
      *
      * @param LoginAttempt $loginAttempt
      *
-     * @return Application
+     * @return ApplicationInterface
      *
      * @throws InvalidGrantException
      */
@@ -165,7 +166,7 @@ class Server
      * @return AccountInterface
      *
      * @throws \InvalidArgumentException
-     * @throws UnknowGrantTypeException
+     * @throws UnknownGrantTypeException
      */
     protected function loadAccount(
         ApplicationInterface $application,
@@ -182,9 +183,9 @@ class Server
      * Grant given credentials, or throws an exception if invalid
      * credentials for application or account.
      *
-     * @param array data    login request data
-     * @param array headers optionnal login request headers
-     * @param array query   optionnal login request query
+     * @param array $data    login request data
+     * @param array $headers optionnal login request headers
+     * @param array $query   optionnal login request query
      *
      * @return AccessTokenInterface
      */
