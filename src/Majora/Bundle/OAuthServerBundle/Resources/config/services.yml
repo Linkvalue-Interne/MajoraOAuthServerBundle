@@ -1,0 +1,32 @@
+services:
+    majora.oauth.grant_extension.password:
+        class: Majora\Component\OAuth\GrantType\PasswordGrantExtension
+        public: false
+        arguments:
+            - ''
+            - '@security.password_encoder'
+
+    majora.oauth.grant_extension.refresh_token:
+        class: Majora\Component\OAuth\GrantType\RefreshTokenGrantExtension
+        public: false
+        arguments:
+            - ''
+            - ''
+
+    majora.oauth.random_generator:
+        class: Majora\Component\OAuth\Generator\RandomTokenGenerator
+        public: false
+        arguments:
+            - ''
+
+    majora.oauth.server:
+        class: Majora\Component\OAuth\Server\Server
+        arguments:
+        - '@event_dispatcher'
+        - ''
+        - ''
+        - ''
+        - '@majora.oauth.random_generator'
+        - { password: '@majora.oauth.grant_extension.password' }
+
+    oauth.server: @majora.oauth.server

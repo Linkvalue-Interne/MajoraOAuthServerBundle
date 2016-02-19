@@ -2,15 +2,17 @@
 
 namespace Majora\Component\OAuth\Entity;
 
-use Majora\Component\OAuth\Model\AccessTokenInterface;
+use Majora\Component\OAuth\Model\RefreshTokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
- * Access token class.
+ * Class RefreshToken is the default implementation of RefreshTokenInterface
+ *
+ * @author Raphael De Freitas <raphael@de-freitas.net>
  */
-class AccessToken implements AccessTokenInterface
+class RefreshToken implements RefreshTokenInterface
 {
     /**
      * @var string
@@ -33,12 +35,12 @@ class AccessToken implements AccessTokenInterface
     protected $application;
 
     /**
-     * @see AccessTokenInterface::__construct()
+     * @see RefreshTokenInterface::__construct()
      */
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
-        $expireIn = AccessTokenInterface::DEFAULT_TTL,
+        $expireIn = RefreshTokenInterface::DEFAULT_TTL,
         $hash = null
     ) {
         $this->application = $application;
@@ -52,7 +54,7 @@ class AccessToken implements AccessTokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getHash()
+     * @see RefreshTokenInterface::getHash()
      */
     public function getHash()
     {
@@ -60,7 +62,7 @@ class AccessToken implements AccessTokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getExpireIn()
+     * @see RefreshTokenInterface::getExpireIn()
      */
     public function getExpireIn()
     {
@@ -68,7 +70,7 @@ class AccessToken implements AccessTokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getAccount()
+     * @see RefreshTokenInterface::getAccount()
      */
     public function getAccount()
     {
@@ -76,7 +78,7 @@ class AccessToken implements AccessTokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getApplication()
+     * @see RefreshTokenInterface::getApplication()
      */
     public function getApplication()
     {
@@ -84,7 +86,7 @@ class AccessToken implements AccessTokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getRoles()
+     * @see RefreshTokenInterface::getRoles()
      */
     public function getRoles()
     {
