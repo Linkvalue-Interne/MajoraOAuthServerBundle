@@ -18,11 +18,13 @@ interface AccessTokenInterface
      * @param ApplicationInterface $application
      * @param AccountInterface     $account
      * @param int                  $expireIn
+     * @param string|null          $hash
      */
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
-        $expireIn = self::DEFAULT_TTL
+        $expireIn = self::DEFAULT_TTL,
+        $hash = null
     );
 
     /**
@@ -59,4 +61,11 @@ interface AccessTokenInterface
      * @return array
      */
     public function getRoles();
+
+    /**
+     * Returns the RefreshToken
+     *
+     * @return RefreshTokenInterface|null
+     */
+    public function getRefreshToken();
 }

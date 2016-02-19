@@ -224,19 +224,8 @@ class Server
         );
 
         // event call
-        $this->eventDispatcher->dispatch(
-            AccessTokenEvents::MAJORA_ACCESS_TOKEN_CREATED,
-            new AccessTokenEvent(
-                $accessToken = new $this->accessTokenClassName(
-                    $application,
-                    $account,
-                    $this->accessTokenTtl,
-                    $this->randomTokenGenerator->generate('access_token')
-                )
-            )
-        );
-
-        if (in_array('refresh_token', $application->getAllowedGrantTypes()) && in_array('refresh_token', $this->grantExtensions)) {
+        $refreshToken = null;
+        if (in_array('refresh_token', $application->getAllowedGrantTypes()) && array_key_exists('refresh_token', $this->grantExtensions)) {
             $this->eventDispatcher->dispatch(
                 RefreshTokenEvents::MAJORA_REFRESH_TOKEN_CREATED,
                 new RefreshTokenEvent(
@@ -249,6 +238,19 @@ class Server
                 )
             );
         }
+
+        $this->eventDispatcher->dispatch(
+            AccessTokenEvents::MAJORA_ACCESS_TOKEN_CREATED,
+            new AccessTokenEvent(
+                $accessToken = new $this->accessTokenClassName(
+                    $application,
+                    $account,
+                    $this->accessTokenTtl,
+                    $this->randomTokenGenerator->generate('access_token'),
+                    $refreshToken
+                )
+            )
+        );
 
         return $accessToken;
     }
