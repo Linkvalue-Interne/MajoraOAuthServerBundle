@@ -24,7 +24,8 @@ interface AccessTokenInterface
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = self::DEFAULT_TTL,
-        $hash = null
+        $hash = null,
+        RefreshTokenInterface $refreshToken = null
     );
 
     /**
