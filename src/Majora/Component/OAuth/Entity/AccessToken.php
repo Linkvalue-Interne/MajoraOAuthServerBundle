@@ -5,6 +5,7 @@ namespace Majora\Component\OAuth\Entity;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
+use Majora\Component\OAuth\Model\RefreshTokenInterface;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
@@ -33,17 +34,24 @@ class AccessToken implements AccessTokenInterface
     protected $application;
 
     /**
+     * @var RefreshTokenInterface
+     */
+    protected $refreshToken;
+
+    /**
      * @see AccessTokenInterface::__construct()
      */
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = AccessTokenInterface::DEFAULT_TTL,
-        $hash = null
+        $hash = null,
+        RefreshTokenInterface $refreshToken = null
     ) {
         $this->application = $application;
         $this->account = $account;
         $this->expireIn = $expireIn;
+        $this->refreshToken = $refreshToken;
 
         $this->hash = $hash ?: (new MessageDigestPasswordEncoder())->encodePassword(
             sprintf('[%s\o/%s]', $application->getSecret(), $account->getPassword() ?: time()),
@@ -90,4 +98,14 @@ class AccessToken implements AccessTokenInterface
     {
         return array_intersect($this->account->getRoles(), $this->application->getRoles());
     }
+
+    /**
+     * @see AccessTokenInterface::getRefreshToken()
+     */
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
+
 }
