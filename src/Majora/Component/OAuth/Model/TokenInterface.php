@@ -23,35 +23,42 @@ interface TokenInterface
     );
 
     /**
-     * Returns access token hash as string.
+     * Returns token as string.
+     *
+     * @return string
+     */
+    public function __toString();
+
+    /**
+     * Returns token hash as string.
      *
      * @return string
      */
     public function getHash();
 
     /**
-     * Returns access token ttl in sec.
+     * Returns token ttl in sec.
      *
      * @return int
      */
     public function getExpireIn();
 
     /**
-     * Returns access token related account.
+     * Returns token related account.
      *
      * @return AccountInterface|null
      */
     public function getAccount();
 
     /**
-     * Returns access token related client.
+     * Returns token related client.
      *
      * @return ApplicationInterface
      */
     public function getApplication();
 
     /**
-     * Returns access token roles, compiled from Application and Account roles.
+     * Returns token roles, compiled from Application and Account roles.
      *
      * @return array
      */
