@@ -2,10 +2,9 @@
 
 namespace Majora\Component\OAuth\Entity;
 
-use Majora\Component\OAuth\Model\AccessTokenInterface;
+use Majora\Component\OAuth\Model\TokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
-use Majora\Component\OAuth\Model\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
@@ -39,12 +38,12 @@ abstract class Token implements TokenInterface
     protected $application;
 
     /**
-     * @see AccessTokenInterface::__construct()
+     * @see TokenInterface::__construct()
      */
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
-        $expireIn = AccessTokenInterface::DEFAULT_TTL,
+        $expireIn = TokenInterface::DEFAULT_TTL,
         $hash = null
     ) {
         $this->application = $application;
@@ -57,13 +56,21 @@ abstract class Token implements TokenInterface
         );
     }
 
+    /**
+     * @see TokenInterface::__toString()
+     */
+    public function __toString()
+    {
+        return $this->hash;
+    }
+
     public function getId()
     {
         return $this->id;
     }
 
     /**
-     * @see AccessTokenInterface::getHash()
+     * @see TokenInterface::getHash()
      */
     public function getHash()
     {
@@ -71,7 +78,7 @@ abstract class Token implements TokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getExpireIn()
+     * @see TokenInterface::getExpireIn()
      */
     public function getExpireIn()
     {
@@ -79,7 +86,7 @@ abstract class Token implements TokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getAccount()
+     * @see TokenInterface::getAccount()
      */
     public function getAccount()
     {
@@ -87,7 +94,7 @@ abstract class Token implements TokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getApplication()
+     * @see TokenInterface::getApplication()
      */
     public function getApplication()
     {
@@ -95,7 +102,7 @@ abstract class Token implements TokenInterface
     }
 
     /**
-     * @see AccessTokenInterface::getRoles()
+     * @see TokenInterface::getRoles()
      */
     public function getRoles()
     {

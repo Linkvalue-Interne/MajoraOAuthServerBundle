@@ -17,7 +17,7 @@ Majora\Component\OAuth\Entity\Token:
             type: string
             length: 128
         expireIn:
-            type: datetime
+            type: integer
     manyToOne:
         account:
             targetEntity: Majora\Component\OAuth\Entity\Account
