@@ -1,0 +1,3 @@
+Majora\Component\OAuth\Entity\RefreshToken:
+    type: entity
+    repositoryClass: Majora\Component\OAuth\Repository\ORM\RefreshTokenRepository

@@ -10,11 +10,14 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
  * Abstract token class.
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
  */
-abstract class AbstractToken implements TokenInterface
+abstract class Token implements TokenInterface
 {
+    /**
+     * @var int
+     */
+    protected $id;
+
     /**
      * @var string
      */
@@ -52,6 +55,11 @@ abstract class AbstractToken implements TokenInterface
             sprintf('[%s\o/%s]', $application->getSecret(), $account->getPassword() ?: time()),
             uniqid(mt_rand(), true)
         );
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

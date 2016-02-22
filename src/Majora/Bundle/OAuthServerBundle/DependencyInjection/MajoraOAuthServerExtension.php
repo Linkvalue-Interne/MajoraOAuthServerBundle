@@ -61,5 +61,10 @@ class MajoraOAuthServerExtension extends Extension
             $randomGeneratorDefinition = $container->getDefinition('majora.oauth.random_generator');
             $randomGeneratorDefinition->replaceArgument(0, $config['secret']);
         }
+
+        // Driver type
+        if ($config['db_driver']) {
+            $container->setParameter($this->getAlias().'.driver.'.$config['db_driver'], true);
+        }
     }
 }

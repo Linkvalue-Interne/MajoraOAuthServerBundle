@@ -21,9 +21,17 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        $supportedDrivers = array('orm');
+
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('majora_oauth_server')
             ->children()
+                ->scalarNode('db_driver')
+                    ->validate()
+                        ->ifNotInArray($supportedDrivers)
+                        ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
+                    ->end()
+                ->end()
                 ->scalarNode('secret')
                     ->isRequired()
                     ->cannotBeEmpty()

@@ -3,10 +3,10 @@
 namespace Majora\Component\OAuth\Loader;
 
 /**
- * Interface RefreshTokenLoaderInterface
+ * Interface AccessTokenLoaderInterface
  *
  * @author Raphael De Freitas <raphael@de-freitas.net>
  */
-interface RefreshTokenLoaderInterface extends TokenLoaderInterface
+interface AccessTokenLoaderInterface extends TokenLoaderInterface
 {
 }

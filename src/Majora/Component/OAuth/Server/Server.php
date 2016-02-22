@@ -189,7 +189,7 @@ class Server
      * @throws \InvalidArgumentException
      * @throws UnknownGrantTypeException
      */
-    protected function loadAccount(
+    protected function  loadAccount(
         ApplicationInterface $application,
         LoginAttempt $loginAttempt
     ) {
