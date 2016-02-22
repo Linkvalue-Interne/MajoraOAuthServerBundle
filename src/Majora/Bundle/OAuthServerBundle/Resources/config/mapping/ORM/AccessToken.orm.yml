@@ -1,0 +1,7 @@
+Majora\Component\OAuth\Entity\AccessToken:
+    type: entity
+    repositoryClass: Majora\Component\OAuth\Repository\ORM\AccessTokenRepository
+    fields:
+        refreshToken:
+            type: string
+            length: 128

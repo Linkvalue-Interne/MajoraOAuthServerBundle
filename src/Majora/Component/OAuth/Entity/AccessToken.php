@@ -6,14 +6,17 @@ use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Majora\Component\OAuth\Model\RefreshTokenInterface;
-use Majora\Component\OAuth\Model\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use Majora\Framework\Model\CollectionableInterface;
+use Majora\Framework\Model\CollectionableTrait;
+use Majora\Framework\Serializer\Model\SerializableTrait;
 
 /**
  * Access token class.
  */
-class AccessToken extends AbstractToken implements AccessTokenInterface
+class AccessToken extends Token implements AccessTokenInterface, CollectionableInterface
 {
+    use CollectionableTrait, SerializableTrait;
+
     /**
      * @var RefreshTokenInterface
      */
@@ -41,5 +44,13 @@ class AccessToken extends AbstractToken implements AccessTokenInterface
         return $this->refreshToken;
     }
 
-
+    /**
+     * @inheritdoc
+     */
+    public static function getScopes()
+    {
+        return array(
+            'identifier' => array('id', 'hash'),
+        );
+    }
 }

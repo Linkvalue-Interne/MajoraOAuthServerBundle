@@ -1,0 +1,31 @@
+Majora\Component\OAuth\Entity\Application:
+    type: entity
+    repositoryClass: Majora\Component\OAuth\Repository\ORM\ApplicationRepository
+    table: majora_oauth_application
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        apiKey:
+            type: string
+            length: 64
+        secret:
+            type: string
+            length: 64
+        domain:
+            type: string
+            length: 128
+        allowedScopes:
+            type: json_array
+            nullable: true
+        allowedGrantTypes:
+            type: json_array
+            nullable: true
+        roles:
+            type: json_array
+            nullable: true
+    manyToMany:
+        accounts:
+            targetEntity: Majora\Component\OAuth\Entity\Account
+            mappedBy: applications

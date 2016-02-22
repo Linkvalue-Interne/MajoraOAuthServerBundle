@@ -14,8 +14,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * Built-in extension for refresh token.
  * Required data :
  *     - refresh_token.
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
  */
 class RefreshTokenGrantExtension implements GrantExtensionInterface
 {

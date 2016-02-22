@@ -3,8 +3,6 @@ namespace Majora\Component\OAuth\Model;
 
 /**
  * Interface to implement on entities used as RefreshToken.
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
  */
 interface RefreshTokenInterface extends TokenInterface
 {
