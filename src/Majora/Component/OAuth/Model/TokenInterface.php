@@ -23,13 +23,6 @@ interface TokenInterface
     );
 
     /**
-     * Returns token as string.
-     *
-     * @return string
-     */
-    public function __toString();
-
-    /**
      * Returns token hash as string.
      *
      * @return string
