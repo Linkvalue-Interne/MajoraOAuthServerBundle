@@ -3,17 +3,25 @@
 namespace Majora\Component\OAuth\Loader;
 
 /**
- * Interface TokenLoaderInterface
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
+ * Token fetching behavior definition.
  */
 interface TokenLoaderInterface
 {
     /**
-     * Retrieves a AccessToken by its hash
+     * Retrieves a token by its hash.
      *
      * @param string $hash
-     * @return TokenLoaderInterface|null
+     *
+     * @return TokenInterface|null
      */
     public function retrieveByHash($hash);
+
+    /**
+     * Retrieve expires token at given date.
+     *
+     * @param \DateTime $datetime
+     *
+     * @return TokenInterface[]
+     */
+    public function retrieveExpired(\DateTime $datetime);
 }

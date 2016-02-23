@@ -3,9 +3,7 @@
 namespace Majora\Component\OAuth\Loader;
 
 /**
- * Interface RefreshTokenLoaderInterface
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
+ * RefreshToken fetching behavior definition.
  */
 interface RefreshTokenLoaderInterface extends TokenLoaderInterface
 {

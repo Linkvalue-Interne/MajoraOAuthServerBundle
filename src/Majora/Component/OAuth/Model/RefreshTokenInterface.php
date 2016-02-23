@@ -1,4 +1,5 @@
 <?php
+
 namespace Majora\Component\OAuth\Model;
 
 /**

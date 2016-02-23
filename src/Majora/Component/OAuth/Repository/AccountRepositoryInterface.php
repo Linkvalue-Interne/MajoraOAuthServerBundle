@@ -2,11 +2,24 @@
 
 namespace Majora\Component\OAuth\Repository;
 
-use Majora\Framework\Repository\RepositoryInterface;
+use Majora\Component\OAuth\Model\AccountInterface;
 
 /**
- * Interface to implement Account repository
+ * Account storage behavior definition.
  */
-interface AccountRepositoryInterface extends RepositoryInterface
+interface AccountRepositoryInterface
 {
+    /**
+     * Store given Account into persistence.
+     *
+     * @param AccountInterface $accessToken
+     */
+    public function persist(AccountInterface $accessToken);
+
+    /**
+     * Remove given Account from persistence.
+     *
+     * @param AccountInterface $accessToken
+     */
+    public function remove(AccountInterface $accessToken);
 }

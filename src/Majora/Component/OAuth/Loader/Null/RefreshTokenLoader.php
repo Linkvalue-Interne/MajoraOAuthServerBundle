@@ -1,11 +1,11 @@
 <?php
 
-namespace Majora\Component\OAuth\Loader\ORM;
+namespace Majora\Component\OAuth\Loader\Null;
 
 use Majora\Component\OAuth\Loader\RefreshTokenLoaderInterface;
 
 /**
- * ORM Refresh token loading implementation.
+ * Empty Refresh token loading implementation.
  */
 class RefreshTokenLoader extends TokenLoader implements RefreshTokenLoaderInterface
 {

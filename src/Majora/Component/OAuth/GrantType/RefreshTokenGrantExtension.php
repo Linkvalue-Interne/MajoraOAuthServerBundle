@@ -8,7 +8,6 @@ use Majora\Component\OAuth\Loader\AccountLoaderInterface;
 use Majora\Component\OAuth\Loader\RefreshTokenLoaderInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Built-in extension for refresh token.
@@ -38,7 +37,7 @@ class RefreshTokenGrantExtension implements GrantExtensionInterface
         RefreshTokenLoaderInterface $refreshTokenLoader
     ) {
         $this->accountLoader = $accountLoader;
-        $this->refreshTokenLoaderrefreshTokenLoader = $refreshTokenLoader;
+        $this->refreshTokenLoader = $refreshTokenLoader;
     }
 
     /**

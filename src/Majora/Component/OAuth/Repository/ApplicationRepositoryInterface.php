@@ -2,11 +2,24 @@
 
 namespace Majora\Component\OAuth\Repository;
 
-use Majora\Framework\Repository\RepositoryInterface;
+use Majora\Component\OAuth\Model\ApplicationInterface;
 
 /**
- * Interface to implement Application repository
+ * Application storage behavior definition.
  */
-interface ApplicationRepositoryInterface extends RepositoryInterface
+interface ApplicationRepositoryInterface
 {
+    /**
+     * Store given Application into persistence.
+     *
+     * @param ApplicationInterface $accessToken
+     */
+    public function persist(ApplicationInterface $accessToken);
+
+    /**
+     * Remove given Application from persistence.
+     *
+     * @param ApplicationInterface $accessToken
+     */
+    public function remove(ApplicationInterface $accessToken);
 }

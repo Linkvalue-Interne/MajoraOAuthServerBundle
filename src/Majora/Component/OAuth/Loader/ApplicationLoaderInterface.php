@@ -3,7 +3,7 @@
 namespace Majora\Component\OAuth\Loader;
 
 /**
- * Interface to implement into Application loader services.
+ * Application fetching behavior definition.
  */
 interface ApplicationLoaderInterface
 {

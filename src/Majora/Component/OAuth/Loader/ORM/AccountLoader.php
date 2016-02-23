@@ -4,29 +4,42 @@ namespace Majora\Component\OAuth\Loader\ORM;
 
 use Majora\Component\OAuth\Loader\AccountLoaderInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
-use Majora\Framework\Loader\Bridge\Doctrine\AbstractDoctrineLoader;
-use Majora\Framework\Loader\Bridge\Doctrine\DoctrineLoaderTrait;
+use Majora\Component\OAuth\Repository\ORM\AccountRepository;
 
 /**
- * ORM Account loading.
+ * ORM Account loading implementation.
  */
-class AccountLoader extends AbstractDoctrineLoader implements AccountLoaderInterface
+class AccountLoader implements AccountLoaderInterface
 {
-    use DoctrineLoaderTrait;
+    /**
+     * @var AccountRepository
+     */
+    protected $accountRepository;
 
     /**
-     * @inheritdoc
+     * Construct.
+     *
+     * @param AccountRepository $accountRepository
+     */
+    public function __construct(AccountRepository $accountRepository)
+    {
+        $this->accountRepository = $accountRepository;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function retrieveOnApplicationByUsername(ApplicationInterface $application, $username)
     {
-        return $this->entityRepository
-                    ->createQueryBuilder('ac')
-                    ->innerJoin('ac.applications', 'app')
-                    ->where('ac.username = :username')
-                    ->andWhere('app.id = :application')
-                    ->setParameter('application', $application->getId())
+        return $this->accountRepository
+            ->createQueryBuilder('ac')
+                ->innerJoin('ac.applications', 'app')
+                ->where('ac.username = :username')
                     ->setParameter('username', $username)
-                    ->getQuery()
-                    ->getOneOrNullResult();
+                ->andWhere('app.id = :application')
+                    ->setParameter('application', $application->getId())
+            ->getQuery()
+                ->getOneOrNullResult()
+        ;
     }
 }

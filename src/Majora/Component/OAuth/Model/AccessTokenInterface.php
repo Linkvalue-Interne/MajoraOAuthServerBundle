@@ -30,7 +30,7 @@ interface AccessTokenInterface extends TokenInterface
     );
 
     /**
-     * Returns the RefreshToken
+     * Returns the RefreshToken.
      *
      * @return RefreshTokenInterface|null
      */

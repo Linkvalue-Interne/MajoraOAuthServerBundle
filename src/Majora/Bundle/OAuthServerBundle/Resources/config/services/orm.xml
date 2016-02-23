@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="majora.oauth.access_token.orm_loader.entity_manager"><!-- config --></parameter>
+        <parameter key="majora.oauth.refresh_token.orm_loader.entity_manager"><!-- config --></parameter>
+        <parameter key="majora.oauth.application.orm_loader.entity_manager"><!-- config --></parameter>
+        <parameter key="majora.oauth.account.orm_loader.entity_manager"><!-- config --></parameter>
+    </parameters>
+
+    <services>
+
+        <!-- Access Token -->
+        <service id="majora.oauth.access_token.orm_loader" public="false"
+            class="Majora\Component\OAuth\Loader\ORM\AccessTokenLoader"
+        >
+            <argument type="service" id="majora.oauth.access_token.orm_repository" />
+        </service>
+
+        <service id="majora.oauth.access_token.orm_repository" public="false"
+            class="Majora\Component\OAuth\Repository\ORM\AccessTokenRepository"
+        >
+            <factory service="doctrine" method="getRepository" />
+            <argument>Majora\Component\OAuth\Entity\AccessToken</argument>
+            <argument>%majora.oauth.access_token.orm_loader.entity_manager%</argument>
+        </service>
+
+        <!-- Refresh Token -->
+        <service id="majora.oauth.refresh_token.orm_loader" public="false"
+            class="Majora\Component\OAuth\Loader\ORM\RefreshTokenLoader"
+        >
+            <argument type="service" id="majora.oauth.refresh_token.orm_repository" />
+        </service>
+
+        <service id="majora.oauth.refresh_token.orm_repository" public="false"
+            class="Majora\Component\OAuth\Repository\ORM\RefreshTokenRepository"
+        >
+            <factory service="doctrine" method="getRepository" />
+            <argument>Majora\Component\OAuth\Entity\RefreshToken</argument>
+            <argument>%majora.oauth.refresh_token.orm_loader.entity_manager%</argument>
+        </service>
+
+        <!-- Application -->
+        <service id="majora.oauth.application.orm_loader" public="false"
+            class="Majora\Component\OAuth\Loader\ORM\ApplicationLoader"
+        >
+            <argument type="service" id="majora.oauth.application.orm_repository" />
+        </service>
+
+        <service id="majora.oauth.application.orm_repository" public="false"
+            class="Majora\Component\OAuth\Repository\ORM\ApplicationRepository"
+        >
+            <factory service="doctrine" method="getRepository" />
+            <argument>Majora\Component\OAuth\Entity\Application</argument>
+            <argument>%majora.oauth.application.orm_loader.entity_manager%</argument>
+        </service>
+
+        <!-- Account -->
+        <service id="majora.oauth.account.orm_loader" public="false"
+            class="Majora\Component\OAuth\Loader\ORM\AccountLoader"
+        >
+            <argument type="service" id="majora.oauth.account.orm_repository" />
+        </service>
+
+        <service id="majora.oauth.account.orm_repository" public="false"
+            class="Majora\Component\OAuth\Repository\ORM\AccountRepository"
+        >
+            <factory service="doctrine" method="getRepository" />
+            <argument>Majora\Component\OAuth\Entity\Account</argument>
+            <argument>%majora.oauth.account.orm_loader.entity_manager%</argument>
+        </service>
+
+    </services>
+
+</container>

@@ -1,25 +1,20 @@
 <?php
 
-namespace Majora\Component\OAuth\Repository\ORM;
+namespace Majora\Component\OAuth\Repository\Null;
 
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Repository\AccountRepositoryInterface;
-use Majora\Framework\Repository\Doctrine\BaseDoctrineRepository;
 
 /**
  * Account repository implementation.
  */
-class AccountRepository extends BaseDoctrineRepository implements AccountRepositoryInterface
+class AccountRepository implements AccountRepositoryInterface
 {
     /**
      * @see AccountRepositoryInterface::persist()
      */
     public function persist(AccountInterface $account)
     {
-        $em = $this->getEntityManager();
-
-        $em->persist($account);
-        $em->flush();
     }
 
     /**
@@ -27,9 +22,5 @@ class AccountRepository extends BaseDoctrineRepository implements AccountReposit
      */
     public function remove(AccountInterface $account)
     {
-        $em = $this->getEntityManager();
-
-        $em->remove($account);
-        $em->flush();
     }
 }
