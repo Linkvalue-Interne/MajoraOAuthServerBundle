@@ -2,11 +2,9 @@
 
 namespace Majora\Component\OAuth\Repository;
 
-use Majora\Framework\Repository\RepositoryInterface;
-
 /**
- * Interface to implement Token repository
+ * Token storage behavior definition.
  */
-interface TokenRepositoryInterface extends RepositoryInterface
+interface TokenRepositoryInterface
 {
 }

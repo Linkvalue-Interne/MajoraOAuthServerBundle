@@ -3,27 +3,53 @@
 namespace Majora\Component\OAuth\Loader\ORM;
 
 use Majora\Component\OAuth\Loader\TokenLoaderInterface;
-use Majora\Framework\Loader\Bridge\Doctrine\AbstractDoctrineLoader;
-use Majora\Framework\Loader\Bridge\Doctrine\DoctrineLoaderTrait;
+use Majora\Component\OAuth\Repository\ORM\TokenRepository;
 
 /**
- * ORM token loading.
+ * ORM token loading implementation.
  */
-class TokenLoader extends AbstractDoctrineLoader implements TokenLoaderInterface
+class TokenLoader implements TokenLoaderInterface
 {
-    use DoctrineLoaderTrait;
+    /**
+     * @var TokenRepository
+     */
+    protected $tokenRepository;
 
     /**
-     * @inheritdoc
+     * Construct.
+     *
+     * @param TokenRepository $tokenRepository
+     */
+    public function __construct(TokenRepository $tokenRepository)
+    {
+        $this->tokenRepository = $tokenRepository;
+    }
+
+    /**
+     * @see TokenLoaderInterface::retrieveByHash()
      */
     public function retrieveByHash($hash)
     {
-        return $this
-            ->entityRepository
+        return $this->tokenRepository
             ->createQueryBuilder('t')
-            ->where('t.hash = :hash')
-            ->setParameter('hash', $hash)
+                ->where('t.hash = :hash')
+                ->setParameter('hash', $hash)
             ->getQuery()
-            ->getOneOrNullResult();
+                ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @see TokenLoaderInterface::retrieveExpired()
+     */
+    public function retrieveExpired(\DateTime $datetime)
+    {
+        return $this->tokenRepository
+            ->createQueryBuilder('t')
+                ->where('t.expireAt > :date')
+                ->setParameter('date', $datetime)
+            ->getQuery()
+                ->getResult()
+        ;
     }
 }

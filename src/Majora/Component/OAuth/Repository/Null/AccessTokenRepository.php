@@ -1,26 +1,22 @@
 <?php
 
-namespace Majora\Component\OAuth\Repository\ORM;
+namespace Majora\Component\OAuth\Repository\Null;
 
 use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Repository\AccessTokenRepositoryInterface;
 
 /**
- * AccessToken repository implementation.
+ * AccessToken repository empty implementation.
  *
  * @see Majora\Component\OAuth\Repository\TokenRepositoryInterface
  */
-class AccessTokenRepository extends TokenRepository implements AccessTokenRepositoryInterface
+class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     /**
      * @see TokenRepositoryInterface::persist()
      */
     public function persist(AccessTokenInterface $accessToken)
     {
-        $em = $this->getEntityManager();
-
-        $em->persist($accessToken);
-        $em->flush();
     }
 
     /**
@@ -28,9 +24,5 @@ class AccessTokenRepository extends TokenRepository implements AccessTokenReposi
      */
     public function remove(AccessTokenInterface $accessToken)
     {
-        $em = $this->getEntityManager();
-
-        $em->remove($accessToken);
-        $em->flush();
     }
 }

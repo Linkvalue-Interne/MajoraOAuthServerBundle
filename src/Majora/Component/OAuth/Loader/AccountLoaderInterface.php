@@ -5,7 +5,7 @@ namespace Majora\Component\OAuth\Loader;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 
 /**
- * Behavior for Account loading.
+ * Account fetching behavior definition.
  */
 interface AccountLoaderInterface
 {

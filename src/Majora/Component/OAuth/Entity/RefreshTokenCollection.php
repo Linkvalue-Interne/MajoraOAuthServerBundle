@@ -1,8 +1,7 @@
 <?php
 
-namespace Majora\Component\OAuth\Collection;
+namespace Majora\Component\OAuth\Entity;
 
-use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Framework\Model\EntityCollection;
 
 /**

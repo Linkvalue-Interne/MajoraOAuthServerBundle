@@ -45,7 +45,7 @@ class AccessToken extends Token implements AccessTokenInterface, CollectionableI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getScopes()
     {

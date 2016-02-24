@@ -1,26 +1,22 @@
 <?php
 
-namespace Majora\Component\OAuth\Repository\ORM;
+namespace Majora\Component\OAuth\Repository\Null;
 
 use Majora\Component\OAuth\Model\RefreshTokenInterface;
 use Majora\Component\OAuth\Repository\RefreshTokenRepositoryInterface;
 
 /**
- * RefreshToken repository implementation.
+ * RefreshToken repository empty implementation.
  *
  * @see Majora\Component\OAuth\Repository\TokenRepositoryInterface
  */
-class RefreshTokenRepository extends TokenRepository implements RefreshTokenRepositoryInterface
+class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
      * @see TokenRepositoryInterface::persist()
      */
     public function persist(RefreshTokenInterface $refreshToken)
     {
-        $em = $this->getEntityManager();
-
-        $em->persist($refreshToken);
-        $em->flush();
     }
 
     /**
@@ -28,9 +24,5 @@ class RefreshTokenRepository extends TokenRepository implements RefreshTokenRepo
      */
     public function remove(RefreshTokenInterface $refreshToken)
     {
-        $em = $this->getEntityManager();
-
-        $em->remove($refreshToken);
-        $em->flush();
     }
 }

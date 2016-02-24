@@ -4,11 +4,8 @@ namespace Majora\Component\OAuth\Server;
 
 use Majora\Component\OAuth\Entity\AccessToken;
 use Majora\Component\OAuth\Entity\LoginAttempt;
-use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Component\OAuth\Event\AccessTokenEvent;
 use Majora\Component\OAuth\Event\AccessTokenEvents;
-use Majora\Component\OAuth\Event\RefreshTokenEvent;
-use Majora\Component\OAuth\Event\RefreshTokenEvents;
 use Majora\Component\OAuth\Exception\InvalidGrantException;
 use Majora\Component\OAuth\Generator\RandomTokenGenerator;
 use Majora\Component\OAuth\GrantType\GrantExtensionInterface;
@@ -17,6 +14,7 @@ use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Majora\Component\OAuth\Model\RefreshTokenInterface;
+use Majora\Framework\Model\EntityCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,7 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Server
 {
     /**
-     * @var GrantExtensionInterface[]
+     * @var EntityCollection
      */
     protected $grantExtensions;
 
@@ -46,58 +44,41 @@ class Server
     protected $randomTokenGenerator;
 
     /**
-     * @var int
+     * @var array
      */
-    protected $accessTokenTtl;
-
-    /**
-     * @var string
-     */
-    protected $accessTokenClassName;
-
-    /**
-     * @var int
-     */
-    protected $refreshTokenTtl;
-
-    /**
-     * @var string
-     */
-    protected $refreshTokenClassName;
+    protected $tokenOptions;
 
     /**
      * Construct.
      *
      * @param EventDispatcherInterface   $eventDispatcher
      * @param ApplicationLoaderInterface $applicationLoader
-     * @param int                        $accessTokenTtl
-     * @param string                     $accessTokenClassName
-     * @param int                        $refreshTokenTtl
-     * @param string                     $refreshTokenClassName
      * @param RandomTokenGenerator       $randomTokenGenerator
+     * @param array                      $tokenOptions
      * @param array                      $grantExtensions
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         ApplicationLoaderInterface $applicationLoader,
-        $accessTokenTtl,
-        $accessTokenClassName,
-        $refreshTokenTtl,
-        $refreshTokenClassName,
         RandomTokenGenerator $randomTokenGenerator,
+        array $tokenOptions,
         array $grantExtensions = array()
     ) {
         $this->applicationLoader = $applicationLoader;
         $this->eventDispatcher = $eventDispatcher;
         $this->randomTokenGenerator = $randomTokenGenerator;
 
-        $this->accessTokenTtl = $accessTokenTtl ?: AccessTokenInterface::DEFAULT_TTL;
-        $this->accessTokenClassName = $accessTokenClassName ?: AccessToken::class;
+        $tokenOptionsResolver = new OptionsResolver();
+        $tokenOptionsResolver->setDefaults(array(
+            'access_token_class' => AccessToken::class,
+            'access_token_ttl' => AccessTokenInterface::DEFAULT_TTL,
+            'refresh_token_class' => RefreshTokenInterface::DEFAULT_TTL,
+            'refresh_token_ttl' => RefreshTokenInterface::DEFAULT_TTL,
+        ));
 
-        $this->refreshTokenTtl = $refreshTokenTtl ?: RefreshTokenInterface::DEFAULT_TTL;
-        $this->refreshTokenClassName = $refreshTokenClassName ?: RefreshToken::class;
+        $this->tokenOptions = $tokenOptionsResolver->resolve($tokenOptions);
 
-        $this->grantExtensions = array();
+        $this->grantExtensions = new EntityCollection();
         foreach ($grantExtensions as $grantType => $extension) {
             $this->registerGrantExtension($grantType, $extension);
         }
@@ -111,7 +92,7 @@ class Server
      */
     public function registerGrantExtension($grantType, GrantExtensionInterface $extension)
     {
-        $this->grantExtensions[$grantType] = $extension;
+        $this->grantExtensions->set($grantType, $extension);
     }
 
     /**
@@ -131,7 +112,7 @@ class Server
             throw new \InvalidArgumentException('Any grant_type given.');
         }
         $grantType = $data['grant_type'];
-        if (!isset($this->grantExtensions[$grantType])) {
+        if (!$this->grantExtensions->containsKey($grantType)) {
             throw new \InvalidArgumentException('Given grant_type is invalid.');
         }
 
@@ -142,9 +123,9 @@ class Server
             'client_api_key',
             'grant_type',
         ));
-        $this->grantExtensions[$grantType]->configureRequestParameters(
-            $requestResolver
-        );
+        $this->grantExtensions->get($grantType)
+            ->configureRequestParameters($requestResolver)
+        ;
 
         return new LoginAttempt(
             $query,
@@ -189,15 +170,15 @@ class Server
      * @throws \InvalidArgumentException
      * @throws UnknownGrantTypeException
      */
-    protected function  loadAccount(
+    protected function loadAccount(
         ApplicationInterface $application,
         LoginAttempt $loginAttempt
     ) {
-        // run grant extension
-        return $this->grantExtensions[$loginAttempt->getData('grant_type')]->grant(
-            $application,
-            $loginAttempt
-        );
+        // run grant extension result
+        return $this->grantExtensions
+            ->get($loginAttempt->getData('grant_type'))
+            ->grant($application, $loginAttempt)
+        ;
     }
 
     /**
@@ -224,30 +205,27 @@ class Server
         );
 
         // event call
-        $refreshToken = null;
-        if (in_array('refresh_token', $application->getAllowedGrantTypes()) && array_key_exists('refresh_token', $this->grantExtensions)) {
-            $this->eventDispatcher->dispatch(
-                RefreshTokenEvents::MAJORA_REFRESH_TOKEN_CREATED,
-                new RefreshTokenEvent(
-                    $refreshToken = new $this->refreshTokenClassName(
-                        $application,
-                        $account,
-                        $this->refreshTokenTtl,
-                        $this->randomTokenGenerator->generate('refresh_token')
-                    )
-                )
-            );
-        }
-
         $this->eventDispatcher->dispatch(
             AccessTokenEvents::MAJORA_ACCESS_TOKEN_CREATED,
             new AccessTokenEvent(
-                $accessToken = new $this->accessTokenClassName(
+
+                // access token generation
+                $accessToken = new $this->tokenOptions['access_token_class'](
                     $application,
                     $account,
-                    $this->accessTokenTtl,
+                    $this->tokenOptions['access_token_ttl'],
                     $this->randomTokenGenerator->generate('access_token'),
-                    $refreshToken
+
+                    // refresh token generation only if necessary
+                    in_array('refresh_token', $application->getAllowedGrantTypes())
+                    && $this->grantExtensions->containsKey('refresh_token') ?
+                        new $this->tokenOptions['refresh_token_class'](
+                            $application,
+                            $account,
+                            $this->tokenOptions['refresh_token_ttl'],
+                            $this->randomTokenGenerator->generate('refresh_token')
+                        ) :
+                        null
                 )
             )
         );

@@ -8,21 +8,6 @@ namespace Majora\Component\OAuth\Model;
 interface TokenInterface
 {
     /**
-     * Construction function.
-     *
-     * @param ApplicationInterface $application
-     * @param AccountInterface     $account
-     * @param int                  $expireIn
-     * @param string|null          $hash
-     */
-    public function __construct(
-        ApplicationInterface $application,
-        AccountInterface $account = null,
-        $expireIn = 0,
-        $hash = null
-    );
-
-    /**
      * Returns token hash as string.
      *
      * @return string

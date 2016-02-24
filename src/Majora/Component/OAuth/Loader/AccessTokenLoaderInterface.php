@@ -3,9 +3,7 @@
 namespace Majora\Component\OAuth\Loader;
 
 /**
- * Interface AccessTokenLoaderInterface
- *
- * @author Raphael De Freitas <raphael@de-freitas.net>
+ * AccessToken fetching behavior definition.
  */
 interface AccessTokenLoaderInterface extends TokenLoaderInterface
 {

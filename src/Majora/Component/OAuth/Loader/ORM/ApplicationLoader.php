@@ -3,29 +3,41 @@
 namespace Majora\Component\OAuth\Loader\ORM;
 
 use Majora\Component\OAuth\Loader\ApplicationLoaderInterface;
-use Majora\Framework\Loader\Bridge\Doctrine\AbstractDoctrineLoader;
-use Majora\Framework\Loader\Bridge\Doctrine\DoctrineLoaderTrait;
+use Majora\Component\OAuth\Repository\ORM\ApplicationRepository;
 
 /**
- * ORM Application loading.
+ * ORM Application loading implementation.
  */
-class ApplicationLoader extends AbstractDoctrineLoader implements ApplicationLoaderInterface
+class ApplicationLoader implements ApplicationLoaderInterface
 {
-    use DoctrineLoaderTrait;
+    /**
+     * @var ApplicationRepository
+     */
+    protected $applicationRepository;
 
     /**
-     * @inheritdoc
+     * Construct.
+     *
+     * @param ApplicationRepository $applicationRepository
+     */
+    public function __construct(ApplicationRepository $applicationRepository)
+    {
+        $this->applicationRepository = $applicationRepository;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function retrieveByApiKeyAndSecret($apiKey, $secret)
     {
-        return $this
-            ->entityRepository
+        return $this->applicationRepository
             ->createQueryBuilder('a')
-            ->where('a.secret = :secret')
-            ->andWhere('a.apiKey = :api_key')
-            ->setParameter('secret', $secret)
-            ->setParameter('api_key', $apiKey)
+                ->where('a.secret = :secret')
+                    ->setParameter('secret', $secret)
+                ->andWhere('a.apiKey = :api_key')
+                    ->setParameter('api_key', $apiKey)
             ->getQuery()
-            ->getOneOrNullResult();
+                ->getOneOrNullResult()
+        ;
     }
 }

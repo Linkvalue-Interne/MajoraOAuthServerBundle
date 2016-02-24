@@ -17,7 +17,8 @@ bin/php-cs-fixer: bin
 	wget http://get.sensiolabs.org/php-cs-fixer.phar -O bin/php-cs-fixer
 	chmod +x bin/php-cs-fixer || /bin/true
 bin/phpunit: bin
-	ln -s ../vendor/phpunit/phpunit/phpunit bin/phpunit
+	cp vendor/phpunit/phpunit/phpunit bin/phpunit
+	chmod +x bin/phpunit || /bin/true
 update-bin: bin/composer bin/php-cs-fixer
 	./bin/composer self-update
 	php bin/php-cs-fixer self-update
