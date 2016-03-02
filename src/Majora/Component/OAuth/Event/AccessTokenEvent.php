@@ -2,25 +2,25 @@
 
 namespace Majora\Component\OAuth\Event;
 
-use Majora\Component\OAuth\Entity\AccessToken;
+use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * AccessToken specific event class.
+ * AccessTokenInterface specific event class.
  */
 class AccessTokenEvent extends Event
 {
     /**
-     * @var AccessToken
+     * @var AccessTokenInterface
      */
     protected $accessToken;
 
     /**
      * construct.
      *
-     * @param AccessToken $accessToken
+     * @param AccessTokenInterface $accessToken
      */
-    public function __construct(AccessToken $accessToken)
+    public function __construct(AccessTokenInterface $accessToken)
     {
         $this->accessToken = $accessToken;
     }
@@ -28,7 +28,7 @@ class AccessTokenEvent extends Event
     /**
      * return related access token.
      *
-     * @return AccessToken
+     * @return AccessTokenInterface
      */
     public function getAccessToken()
     {

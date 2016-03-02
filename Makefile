@@ -16,9 +16,6 @@ bin/composer: bin
 bin/php-cs-fixer: bin
 	wget http://get.sensiolabs.org/php-cs-fixer.phar -O bin/php-cs-fixer
 	chmod +x bin/php-cs-fixer || /bin/true
-bin/phpunit: bin
-	cp vendor/phpunit/phpunit/phpunit bin/phpunit
-	chmod +x bin/phpunit || /bin/true
 update-bin: bin/composer bin/php-cs-fixer
 	./bin/composer self-update
 	php bin/php-cs-fixer self-update
@@ -43,12 +40,12 @@ install-vendors: install-composer
 #
 tests: test-phpunit-coverage
 
-test-phpunit: bin/phpunit
-	./bin/phpunit src -c phpunit.xml.dist
+test-phpunit:
+	./vendor/phpunit/phpunit/phpunit src -c phpunit.xml.dist
 
-test-phpunit-coverage: bin/phpunit
+test-phpunit-coverage:
 	rm -rf tests-coverage/* || /bin/true
-	./bin/phpunit src -c phpunit.xml.dist --coverage-html tests-coverage
+	./vendor/phpunit/phpunit/phpunit src -c phpunit.xml.dist --coverage-html tests-coverage
 
 #
 # CI
@@ -59,6 +56,6 @@ bin/ocular:
 	wget https://scrutinizer-ci.com/ocular.phar -O bin/ocular
 	chmod +x bin/ocular || /bin/true
 
-travis: ci-install-composer bin/phpunit bin/ocular
-	./bin/phpunit src -c phpunit.xml.dist --coverage-clover=coverage.clover
+travis: ci-install-composer bin/ocular
+	./vendor/phpunit/phpunit/phpunit src -c phpunit.xml.dist --coverage-clover=coverage.clover
 	php bin/ocular code-coverage:upload --format=php-clover coverage.clover

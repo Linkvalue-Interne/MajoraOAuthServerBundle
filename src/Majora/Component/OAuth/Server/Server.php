@@ -4,6 +4,7 @@ namespace Majora\Component\OAuth\Server;
 
 use Majora\Component\OAuth\Entity\AccessToken;
 use Majora\Component\OAuth\Entity\LoginAttempt;
+use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Component\OAuth\Event\AccessTokenEvent;
 use Majora\Component\OAuth\Event\AccessTokenEvents;
 use Majora\Component\OAuth\Exception\InvalidGrantException;
@@ -72,7 +73,7 @@ class Server
         $tokenOptionsResolver->setDefaults(array(
             'access_token_class' => AccessToken::class,
             'access_token_ttl' => AccessTokenInterface::DEFAULT_TTL,
-            'refresh_token_class' => RefreshTokenInterface::DEFAULT_TTL,
+            'refresh_token_class' => RefreshToken::class,
             'refresh_token_ttl' => RefreshTokenInterface::DEFAULT_TTL,
         ));
 
