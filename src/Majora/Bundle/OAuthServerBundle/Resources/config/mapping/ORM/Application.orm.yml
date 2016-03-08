@@ -27,5 +27,5 @@ Majora\Component\OAuth\Entity\Application:
             nullable: true
     manyToMany:
         accounts:
-            targetEntity: Majora\Component\OAuth\Entity\Account
+            targetEntity: Majora\Component\OAuth\Model\AccountInterface
             mappedBy: applications

@@ -18,12 +18,14 @@ interface RefreshTokenInterface extends TokenInterface
      * @param ApplicationInterface $application
      * @param AccountInterface     $account
      * @param int                  $expireIn
+     * @param DateTime             $expireAt
      * @param string               $hash
      */
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = self::DEFAULT_TTL,
+        \DateTime $expireAt = null,
         $hash = null
     );
 }

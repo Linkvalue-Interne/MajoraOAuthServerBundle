@@ -2,7 +2,7 @@ Majora\Component\OAuth\Entity\Token:
     type: entity
     inheritanceType: SINGLE_TABLE
     discriminatorColumn:
-        name: discr
+        name: token_type
         type: string
     discriminatorMap:
         access_token: AccessToken
@@ -18,14 +18,16 @@ Majora\Component\OAuth\Entity\Token:
             length: 128
         expireIn:
             type: integer
+        expireAt:
+            type: datetime
     manyToOne:
         account:
-            targetEntity: Majora\Component\OAuth\Entity\Account
+            targetEntity: Majora\Component\OAuth\Model\AccountInterface
             joinColumn:
                 name: account_id
                 referencedColumnName: id
         application:
-            targetEntity: Majora\Component\OAuth\Entity\Application
+            targetEntity: Majora\Component\OAuth\Model\ApplicationInterface
             joinColumn:
                 name: application_id
                 referencedColumnName: id

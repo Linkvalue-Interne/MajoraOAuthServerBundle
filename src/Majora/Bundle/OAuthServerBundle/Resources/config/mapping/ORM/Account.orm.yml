@@ -24,10 +24,10 @@ Majora\Component\OAuth\Entity\Account:
             nullable: true
     manyToMany:
         applications:
-            targetEntity: Majora\Component\OAuth\Entity\Application
+            targetEntity: Majora\Component\OAuth\Model\ApplicationInterface
             inversedBy: accounts
             joinTable:
-                name: majora_oauth_account_to_application
+                name: majora_oauth_account_application
                 joinColumns:
                     application_id:
                         referencedColumnName: id

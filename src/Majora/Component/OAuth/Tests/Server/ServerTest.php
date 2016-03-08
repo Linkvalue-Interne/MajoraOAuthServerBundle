@@ -12,6 +12,7 @@ use Majora\Component\OAuth\Event\AccessTokenEvents;
 use Majora\Component\OAuth\Exception\InvalidGrantException;
 use Majora\Component\OAuth\Generator\RandomTokenGenerator;
 use Majora\Component\OAuth\GrantType\GrantExtensionInterface;
+use Majora\Component\OAuth\Loader\AccessTokenLoaderInterface;
 use Majora\Component\OAuth\Loader\ApplicationLoaderInterface;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Model\RefreshTokenInterface;
@@ -45,19 +46,19 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                     array(),
                     array(),
                 ),
-                new AccessToken(new Application(), new Account(), AccessTokenInterface::DEFAULT_TTL, 'mocked_hash'),
+                new AccessToken(new Application(), new Account(), AccessTokenInterface::DEFAULT_TTL, null, 'mocked_hash'),
             ),
             'ttl_settings' => array_replace_recursive($defaultCase, array(
                 array('access_token_ttl' => 123456),
                 AccessToken::class,
                 array(),
-                new AccessToken(new Application(), new Account(), 123456, 'mocked_hash'),
+                new AccessToken(new Application(), new Account(), 123456, null, 'mocked_hash'),
             )),
             'class_settings' => array_replace_recursive($defaultCase, array(
                 array('access_token_class' => MockedAccessToken::class),
                 MockedAccessToken::class,
                 array(),
-                new MockedAccessToken(new Application(), new Account(), AccessTokenInterface::DEFAULT_TTL, 'mocked_hash'),
+                new MockedAccessToken(new Application(), new Account(), AccessTokenInterface::DEFAULT_TTL, null, 'mocked_hash'),
             )),
         );
     }
@@ -101,6 +102,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = new Server(
             $eventDispatcher->reveal(),
             $applicationLoader->reveal(),
+            $this->prophesize(AccessTokenLoaderInterface::class)->reveal(),
             $randomTokenGenerator->reveal(),
             $tokenOptions,
             array('mocked_grant_type' => $extension->reveal())
@@ -135,6 +137,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                     new Application(),
                     new Account(),
                     RefreshTokenInterface::DEFAULT_TTL,
+                    null,
                     'mocked_refresh_token_hash'
                 ),
             ),
@@ -142,7 +145,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                 array('refresh_token_ttl' => 654321),
                 RefreshToken::class,
                 array(),
-                new RefreshToken(new Application(), new Account(), 654321, 'mocked_refresh_token_hash'),
+                new RefreshToken(new Application(), new Account(), 654321, null, 'mocked_refresh_token_hash'),
             )),
             'class_settings' => array_replace_recursive($defaultCase, array(
                 array('refresh_token_class' => MockedRefreshToken::class),
@@ -152,6 +155,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
                     new Application(),
                     new Account(),
                     RefreshTokenInterface::DEFAULT_TTL,
+                    null,
                     'mocked_refresh_token_hash'
                 ),
             )),
@@ -189,6 +193,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = new Server(
             $this->prophesize(EventDispatcherInterface::class)->reveal(),
             $applicationLoader->reveal(),
+            $this->prophesize(AccessTokenLoaderInterface::class)->reveal(),
             $randomTokenGenerator->reveal(),
             $tokenOptions,
             array(
@@ -275,6 +280,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = new Server(
             $this->prophesize(EventDispatcherInterface::class)->reveal(),
             $applicationLoader->reveal(),
+            $this->prophesize(AccessTokenLoaderInterface::class)->reveal(),
             $randomTokenGenerator->reveal(),
             array(),
             array('mocked_grant_type' => $this->prophesize(GrantExtensionInterface::class)->reveal())

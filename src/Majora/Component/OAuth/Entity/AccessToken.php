@@ -29,10 +29,11 @@ class AccessToken extends Token implements AccessTokenInterface, CollectionableI
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = AccessTokenInterface::DEFAULT_TTL,
+        \DateTime $expireAt = null,
         $hash = null,
         RefreshTokenInterface $refreshToken = null
     ) {
-        parent::__construct($application, $account, $expireIn, $hash);
+        parent::__construct($application, $account, $expireIn, $expireAt, $hash);
         $this->refreshToken = $refreshToken;
     }
 

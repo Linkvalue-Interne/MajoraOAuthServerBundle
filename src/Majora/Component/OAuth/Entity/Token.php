@@ -28,6 +28,11 @@ abstract class Token implements TokenInterface
     protected $expireIn;
 
     /**
+     * @var \DateTime
+     */
+    protected $expireAt;
+
+    /**
      * @var AccountInterface
      */
     protected $account;
@@ -44,11 +49,13 @@ abstract class Token implements TokenInterface
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = TokenInterface::DEFAULT_TTL,
+        \DateTime $expireAt = null,
         $hash = null
     ) {
         $this->application = $application;
         $this->account = $account;
         $this->expireIn = $expireIn;
+        $this->expireAt = $expireAt ?: \DateTime::createFromFormat('U', time() + intval($expireIn));
 
         $this->hash = $hash ?: (new MessageDigestPasswordEncoder())->encodePassword(
             sprintf('[%s\o/%s]', $application->getSecret(), $account->getPassword() ?: time()),
@@ -83,6 +90,14 @@ abstract class Token implements TokenInterface
     public function getExpireIn()
     {
         return $this->expireIn;
+    }
+
+    /**
+     * @see TokenInterface::getExpireAt()
+     */
+    public function getExpireAt()
+    {
+        return $this->expireAt;
     }
 
     /**
