@@ -25,6 +25,7 @@ interface AccessTokenInterface extends TokenInterface
         ApplicationInterface $application,
         AccountInterface $account = null,
         $expireIn = self::DEFAULT_TTL,
+        \DateTime $expireAt = null,
         $hash = null,
         RefreshTokenInterface $refreshToken = null
     );

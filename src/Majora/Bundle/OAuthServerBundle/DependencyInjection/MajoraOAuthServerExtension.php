@@ -45,7 +45,7 @@ class MajoraOAuthServerExtension extends Extension
 
         // server
         $serverDefinition = $container->getDefinition('majora.oauth.server');
-        $serverDefinition->replaceArgument(3, array(
+        $serverDefinition->replaceArgument(4, array(
             'access_token_class' => $config['access_token']['class'],
             'access_token_ttl' => $config['access_token']['ttl'],
             'refresh_token_class' => $config['refresh_token']['class'],

@@ -22,6 +22,13 @@ interface TokenInterface
     public function getExpireIn();
 
     /**
+     * Returns token expiration date.
+     *
+     * @return \DateTime
+     */
+    public function getExpireAt();
+
+    /**
      * Returns token related account.
      *
      * @return AccountInterface|null

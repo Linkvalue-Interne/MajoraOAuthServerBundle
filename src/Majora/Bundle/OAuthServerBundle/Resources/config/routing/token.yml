@@ -1,0 +1,6 @@
+oauth_api_token_create:
+    path: /
+    defaults:
+        _controller: MajoraOAuthServerBundle:TokenApi:post
+    methods:
+        - POST

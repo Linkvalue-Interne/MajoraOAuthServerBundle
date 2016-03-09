@@ -7,9 +7,11 @@ use Majora\Component\OAuth\Entity\LoginAttempt;
 use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Component\OAuth\Event\AccessTokenEvent;
 use Majora\Component\OAuth\Event\AccessTokenEvents;
+use Majora\Component\OAuth\Exception\InvalidAccessTokenException;
 use Majora\Component\OAuth\Exception\InvalidGrantException;
 use Majora\Component\OAuth\Generator\RandomTokenGenerator;
 use Majora\Component\OAuth\GrantType\GrantExtensionInterface;
+use Majora\Component\OAuth\Loader\AccessTokenLoaderInterface;
 use Majora\Component\OAuth\Loader\ApplicationLoaderInterface;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
 use Majora\Component\OAuth\Model\AccountInterface;
@@ -35,6 +37,11 @@ class Server
     protected $applicationLoader;
 
     /**
+     * @var AccessTokenLoaderInterface
+     */
+    protected $accessTokenLoader;
+
+    /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
@@ -54,6 +61,7 @@ class Server
      *
      * @param EventDispatcherInterface   $eventDispatcher
      * @param ApplicationLoaderInterface $applicationLoader
+     * @param AccessTokenLoaderInterface $accessTokenLoader
      * @param RandomTokenGenerator       $randomTokenGenerator
      * @param array                      $tokenOptions
      * @param array                      $grantExtensions
@@ -61,11 +69,13 @@ class Server
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         ApplicationLoaderInterface $applicationLoader,
+        AccessTokenLoaderInterface $accessTokenLoader,
         RandomTokenGenerator $randomTokenGenerator,
         array $tokenOptions,
         array $grantExtensions = array()
     ) {
         $this->applicationLoader = $applicationLoader;
+        $this->accessTokenLoader = $accessTokenLoader;
         $this->eventDispatcher = $eventDispatcher;
         $this->randomTokenGenerator = $randomTokenGenerator;
 
@@ -215,6 +225,7 @@ class Server
                     $application,
                     $account,
                     $this->tokenOptions['access_token_ttl'],
+                    null, // for now, we let the expiration date calculate itself
                     $this->randomTokenGenerator->generate('access_token'),
 
                     // refresh token generation only if necessary
@@ -224,12 +235,31 @@ class Server
                             $application,
                             $account,
                             $this->tokenOptions['refresh_token_ttl'],
+                            null, // same
                             $this->randomTokenGenerator->generate('refresh_token')
                         ) :
                         null
                 )
             )
         );
+
+        return $accessToken;
+    }
+
+    /**
+     * Tests if given hash match a valid AccessToken.
+     *
+     * @param string $hash
+     *
+     * @return AccessToken
+     *
+     * @throws InvalidAccessTokenException
+     */
+    public function check($hash)
+    {
+        if (!$accessToken = $this->accessTokenLoader->retrieveByHash($hash)) {
+            throw new InvalidAccessTokenException('Given access token is wrong or expired.');
+        }
 
         return $accessToken;
     }
