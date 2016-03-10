@@ -3,12 +3,22 @@
 namespace Majora\Component\OAuth\Entity;
 
 use Majora\Component\OAuth\Model\AccountInterface;
+use Majora\Framework\Model\CollectionableInterface;
+use Majora\Framework\Model\CollectionableTrait;
+use Majora\Framework\Serializer\Model\SerializableTrait;
 
 /**
  * Basic implementation on AccountInterface.
  */
-class Account implements AccountInterface
+class Account implements AccountInterface, CollectionableInterface
 {
+    use CollectionableTrait, SerializableTrait;
+
+    /**
+     * @var int
+     */
+    protected $id;
+
     /**
      * @var int
      */
@@ -35,6 +45,22 @@ class Account implements AccountInterface
     protected $roles;
 
     /**
+     * @var array
+     */
+    protected $applications;
+
+    /**
+     * @see NormalizableInterface::getScope()
+     */
+    public static function getScopes()
+    {
+        return array(
+            'id' => 'id',
+            'default' => array('id', 'owner_id', 'username'),
+        );
+    }
+
+    /**
      * Construct.
      *
      * @param string $rand
@@ -43,6 +69,14 @@ class Account implements AccountInterface
     {
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true).$rand), 16, 36);
         $this->roles = array();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -137,5 +171,21 @@ class Account implements AccountInterface
     public function eraseCredentials()
     {
         return;
+    }
+
+    /**
+     * @return array
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param array $applications
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
     }
 }

@@ -1,0 +1,36 @@
+Majora\Component\OAuth\Entity\Account:
+    type: entity
+    repositoryClass: Majora\Component\OAuth\Repository\ORM\AccountRepository
+    table: majora_oauth_account
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        username:
+            type: string
+            length: 64
+        password:
+            type: string
+            length: 128
+        salt:
+            type: string
+            length: 128
+        roles:
+            type: json_array
+            nullable: true
+        ownerId:
+            type: integer
+            nullable: true
+    manyToMany:
+        applications:
+            targetEntity: Majora\Component\OAuth\Model\ApplicationInterface
+            inversedBy: accounts
+            joinTable:
+                name: majora_oauth_account_application
+                joinColumns:
+                    application_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    account_id:
+                        referencedColumnName: id

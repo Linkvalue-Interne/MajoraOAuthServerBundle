@@ -6,7 +6,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -30,29 +29,60 @@ class MajoraOAuthServerExtension extends Extension
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
+        $loader->load('server.xml');
+        $loader->load('extensions.xml');
+        $loader->load('empty.xml');
+        $loader->load('orm.xml');
 
-        // override server default server definition
         if (!$container->hasDefinition('majora.oauth.server')) {
             return;
         }
 
-        $serverDefinition = $container->getDefinition('majora.oauth.server');
-        $serverDefinition->replaceArgument(1, new Reference($config['application']['loader']));
-        $serverDefinition->replaceArgument(2, $config['access_token']['ttl']);
-        $serverDefinition->replaceArgument(3, $config['access_token']['class']);
-
-        // password extension
-        if ($container->hasDefinition('majora.oauth.grant_extension.password')) {
-            $passwordExtensionDefinition = $container->getDefinition('majora.oauth.grant_extension.password');
-            $passwordExtensionDefinition->replaceArgument(0, new Reference($config['account']['loader']));
-        }
-
         // token generator
-        if ($container->hasDefinition('majora.oauth.random_generator')) {
-            $randomGeneratorDefinition = $container->getDefinition('majora.oauth.random_generator');
-            $randomGeneratorDefinition->replaceArgument(0, $config['secret']);
+        $randomGeneratorDefinition = $container->getDefinition('majora.oauth.random_generator');
+        $randomGeneratorDefinition->replaceArgument(0, $config['secret']);
+
+        // server
+        $serverDefinition = $container->getDefinition('majora.oauth.server');
+        $serverDefinition->replaceArgument(4, array(
+            'access_token_class' => $config['access_token']['class'],
+            'access_token_ttl' => $config['access_token']['ttl'],
+            'refresh_token_class' => $config['refresh_token']['class'],
+            'refresh_token_ttl' => $config['refresh_token']['ttl'],
+        ));
+
+        // aliases generation
+        foreach (array('access_token', 'refresh_token', 'application', 'account') as $entity) {
+            foreach (array('loader', 'repository') as $serviceAlias) {
+                foreach ($config[$entity][$serviceAlias] as $driver => $parameters) {
+
+                    // given service id or build one from registered strategies
+                    $serviceId = $driver == 'id' ?
+                        $parameters :
+                        sprintf('majora.oauth.%s.%s_%s', $entity, $driver, $serviceAlias)
+                    ;
+
+                    // publish given service
+                    $container->setAlias(
+                        sprintf('majora.oauth.%s.%s', $entity, $serviceAlias),
+                        $serviceId
+                    );
+
+                    // register parameters under driver if given
+                    //
+                    // !! implements here a better strategy !!
+                    //
+                    if (is_array($parameters)) {
+                        foreach ($parameters as $key => $value) {
+                            $container->setParameter(
+                                sprintf('majora.oauth.%s.%s_%s.%s', $entity, $driver, $serviceAlias, $key),
+                                $value
+                            );
+                        }
+                    }
+                }
+            }
         }
     }
 }

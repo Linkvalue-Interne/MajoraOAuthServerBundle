@@ -3,12 +3,22 @@
 namespace Majora\Component\OAuth\Entity;
 
 use Majora\Component\OAuth\Model\ApplicationInterface;
+use Majora\Framework\Model\CollectionableInterface;
+use Majora\Framework\Model\CollectionableTrait;
+use Majora\Framework\Serializer\Model\SerializableTrait;
 
 /**
  * Basic implementation on ApplicationInterface.
  */
-class Application implements ApplicationInterface
+class Application implements ApplicationInterface, CollectionableInterface
 {
+    use CollectionableTrait, SerializableTrait;
+
+    /**
+     * @var int
+     */
+    protected $id;
+
     /**
      * @var string
      */
@@ -40,6 +50,22 @@ class Application implements ApplicationInterface
     protected $roles;
 
     /**
+     * @var array
+     */
+    protected $accounts;
+
+    /**
+     * @see NormalizableInterface::getScope()
+     */
+    public static function getScopes()
+    {
+        return array(
+            'id' => 'id',
+            'default' => array('id', 'domain', 'allowed_scopes'),
+        );
+    }
+
+    /**
      * Construct.
      */
     public function __construct()
@@ -47,6 +73,14 @@ class Application implements ApplicationInterface
         $this->allowedScopes = array();
         $this->allowedGrantTypes = array();
         $this->roles = array();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -179,5 +213,21 @@ class Application implements ApplicationInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * @param array $accounts
+     */
+    public function setAccounts($accounts)
+    {
+        $this->accounts = $accounts;
     }
 }

@@ -5,8 +5,7 @@ filter:
     paths:
         - 'src/*'
     excluded_paths:
-        - Tests/*
-        - vendor/*
+        - '*Tests/*'
 
 coding_style:
     php:

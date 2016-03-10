@@ -44,7 +44,7 @@ class RandomTokenGenerator
 
         // let's just hope we got a good seed
         if (false === $bytes) {
-            $bytes = hash('sha256',
+            $bytes = hash('sha512',
                 sprintf('-[%s}\%s/{%s]-',
                     $intention,
                     uniqid(mt_rand(), true),
@@ -54,6 +54,10 @@ class RandomTokenGenerator
             );
         }
 
-        return base_convert(bin2hex($bytes), 16, 36);
+        return str_pad(
+            base_convert(bin2hex($bytes), 16, 36),
+            50,
+            rand(0, 9)
+        );
     }
 }

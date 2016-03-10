@@ -4,14 +4,20 @@ namespace Majora\Component\OAuth\Server;
 
 use Majora\Component\OAuth\Entity\AccessToken;
 use Majora\Component\OAuth\Entity\LoginAttempt;
+use Majora\Component\OAuth\Entity\RefreshToken;
 use Majora\Component\OAuth\Event\AccessTokenEvent;
 use Majora\Component\OAuth\Event\AccessTokenEvents;
+use Majora\Component\OAuth\Exception\InvalidAccessTokenException;
 use Majora\Component\OAuth\Exception\InvalidGrantException;
 use Majora\Component\OAuth\Generator\RandomTokenGenerator;
 use Majora\Component\OAuth\GrantType\GrantExtensionInterface;
+use Majora\Component\OAuth\Loader\AccessTokenLoaderInterface;
 use Majora\Component\OAuth\Loader\ApplicationLoaderInterface;
 use Majora\Component\OAuth\Model\AccessTokenInterface;
+use Majora\Component\OAuth\Model\AccountInterface;
 use Majora\Component\OAuth\Model\ApplicationInterface;
+use Majora\Component\OAuth\Model\RefreshTokenInterface;
+use Majora\Framework\Model\EntityCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Server
 {
     /**
-     * @var GrantExtensionInterface[]
+     * @var EntityCollection
      */
     protected $grantExtensions;
 
@@ -29,6 +35,11 @@ class Server
      * @var ApplicationLoaderInterface
      */
     protected $applicationLoader;
+
+    /**
+     * @var AccessTokenLoaderInterface
+     */
+    protected $accessTokenLoader;
 
     /**
      * @var EventDispatcherInterface
@@ -41,41 +52,44 @@ class Server
     protected $randomTokenGenerator;
 
     /**
-     * @var int
+     * @var array
      */
-    protected $accessTokenTtl;
-
-    /**
-     * @var string
-     */
-    protected $accessTokenClassName;
+    protected $tokenOptions;
 
     /**
      * Construct.
      *
      * @param EventDispatcherInterface   $eventDispatcher
      * @param ApplicationLoaderInterface $applicationLoader
-     * @param int                        $accessTokenTtl
-     * @param string                     $accessTokenClassName
+     * @param AccessTokenLoaderInterface $accessTokenLoader
      * @param RandomTokenGenerator       $randomTokenGenerator
+     * @param array                      $tokenOptions
      * @param array                      $grantExtensions
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         ApplicationLoaderInterface $applicationLoader,
-        $accessTokenTtl,
-        $accessTokenClassName,
+        AccessTokenLoaderInterface $accessTokenLoader,
         RandomTokenGenerator $randomTokenGenerator,
+        array $tokenOptions,
         array $grantExtensions = array()
     ) {
         $this->applicationLoader = $applicationLoader;
+        $this->accessTokenLoader = $accessTokenLoader;
         $this->eventDispatcher = $eventDispatcher;
         $this->randomTokenGenerator = $randomTokenGenerator;
 
-        $this->accessTokenTtl = $accessTokenTtl ?: AccessTokenInterface::DEFAULT_TTL;
-        $this->accessTokenClassName = $accessTokenClassName ?: AccessToken::class;
+        $tokenOptionsResolver = new OptionsResolver();
+        $tokenOptionsResolver->setDefaults(array(
+            'access_token_class' => AccessToken::class,
+            'access_token_ttl' => AccessTokenInterface::DEFAULT_TTL,
+            'refresh_token_class' => RefreshToken::class,
+            'refresh_token_ttl' => RefreshTokenInterface::DEFAULT_TTL,
+        ));
 
-        $this->grantExtensions = array();
+        $this->tokenOptions = $tokenOptionsResolver->resolve($tokenOptions);
+
+        $this->grantExtensions = new EntityCollection();
         foreach ($grantExtensions as $grantType => $extension) {
             $this->registerGrantExtension($grantType, $extension);
         }
@@ -89,7 +103,7 @@ class Server
      */
     public function registerGrantExtension($grantType, GrantExtensionInterface $extension)
     {
-        $this->grantExtensions[$grantType] = $extension;
+        $this->grantExtensions->set($grantType, $extension);
     }
 
     /**
@@ -109,7 +123,7 @@ class Server
             throw new \InvalidArgumentException('Any grant_type given.');
         }
         $grantType = $data['grant_type'];
-        if (!isset($this->grantExtensions[$grantType])) {
+        if (!$this->grantExtensions->containsKey($grantType)) {
             throw new \InvalidArgumentException('Given grant_type is invalid.');
         }
 
@@ -120,9 +134,9 @@ class Server
             'client_api_key',
             'grant_type',
         ));
-        $this->grantExtensions[$grantType]->configureRequestParameters(
-            $requestResolver
-        );
+        $this->grantExtensions->get($grantType)
+            ->configureRequestParameters($requestResolver)
+        ;
 
         return new LoginAttempt(
             $query,
@@ -136,7 +150,7 @@ class Server
      *
      * @param LoginAttempt $loginAttempt
      *
-     * @return Application
+     * @return ApplicationInterface
      *
      * @throws InvalidGrantException
      */
@@ -165,26 +179,26 @@ class Server
      * @return AccountInterface
      *
      * @throws \InvalidArgumentException
-     * @throws UnknowGrantTypeException
+     * @throws UnknownGrantTypeException
      */
     protected function loadAccount(
         ApplicationInterface $application,
         LoginAttempt $loginAttempt
     ) {
-        // run grant extension
-        return $this->grantExtensions[$loginAttempt->getData('grant_type')]->grant(
-            $application,
-            $loginAttempt
-        );
+        // run grant extension result
+        return $this->grantExtensions
+            ->get($loginAttempt->getData('grant_type'))
+            ->grant($application, $loginAttempt)
+        ;
     }
 
     /**
      * Grant given credentials, or throws an exception if invalid
      * credentials for application or account.
      *
-     * @param array data    login request data
-     * @param array headers optionnal login request headers
-     * @param array query   optionnal login request query
+     * @param array $data    login request data
+     * @param array $headers optionnal login request headers
+     * @param array $query   optionnal login request query
      *
      * @return AccessTokenInterface
      */
@@ -205,14 +219,47 @@ class Server
         $this->eventDispatcher->dispatch(
             AccessTokenEvents::MAJORA_ACCESS_TOKEN_CREATED,
             new AccessTokenEvent(
-                $accessToken = new $this->accessTokenClassName(
+
+                // access token generation
+                $accessToken = new $this->tokenOptions['access_token_class'](
                     $application,
                     $account,
-                    $this->accessTokenTtl,
-                    $this->randomTokenGenerator->generate('access_token')
+                    $this->tokenOptions['access_token_ttl'],
+                    null, // for now, we let the expiration date calculate itself
+                    $this->randomTokenGenerator->generate('access_token'),
+
+                    // refresh token generation only if necessary
+                    in_array('refresh_token', $application->getAllowedGrantTypes())
+                    && $this->grantExtensions->containsKey('refresh_token') ?
+                        new $this->tokenOptions['refresh_token_class'](
+                            $application,
+                            $account,
+                            $this->tokenOptions['refresh_token_ttl'],
+                            null, // same
+                            $this->randomTokenGenerator->generate('refresh_token')
+                        ) :
+                        null
                 )
             )
         );
+
+        return $accessToken;
+    }
+
+    /**
+     * Tests if given hash match a valid AccessToken.
+     *
+     * @param string $hash
+     *
+     * @return AccessToken
+     *
+     * @throws InvalidAccessTokenException
+     */
+    public function check($hash)
+    {
+        if (!$accessToken = $this->accessTokenLoader->retrieveByHash($hash)) {
+            throw new InvalidAccessTokenException('Given access token is wrong or expired.');
+        }
 
         return $accessToken;
     }
