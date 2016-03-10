@@ -89,6 +89,8 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
         // or api limit isnt crossed
         // or anonymous allowed
         // etc...
+
+        return true;
     }
 
     /**
@@ -117,7 +119,10 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        // if anonymous granted
+        return !$authException ? null : new JsonResponse(
+            array('message' => 'Invalid OAuth credentials.'),
+            401
+        );
     }
 
     /**

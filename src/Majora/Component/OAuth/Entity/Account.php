@@ -50,6 +50,17 @@ class Account implements AccountInterface, CollectionableInterface
     protected $applications;
 
     /**
+     * @see NormalizableInterface::getScope()
+     */
+    public static function getScopes()
+    {
+        return array(
+            'id' => 'id',
+            'default' => array('id', 'owner_id', 'username'),
+        );
+    }
+
+    /**
      * Construct.
      *
      * @param string $rand
@@ -176,10 +187,5 @@ class Account implements AccountInterface, CollectionableInterface
     public function setApplications($applications)
     {
         $this->applications = $applications;
-    }
-
-    public static function getScopes()
-    {
-        return array();
     }
 }

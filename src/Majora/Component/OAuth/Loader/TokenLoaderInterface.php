@@ -23,5 +23,5 @@ interface TokenLoaderInterface
      *
      * @return TokenInterface[]
      */
-    public function retrieveExpired(\DateTime $datetime);
+    public function retrieveExpired(\DateTime $datetime = null);
 }

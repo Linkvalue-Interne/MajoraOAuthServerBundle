@@ -20,7 +20,7 @@ class TokenLoader implements TokenLoaderInterface
     /**
      * @see TokenLoaderInterface::retrieveExpired()
      */
-    public function retrieveExpired(\DateTime $datetime)
+    public function retrieveExpired(\DateTime $datetime = null)
     {
         return array();
     }

@@ -18,6 +18,7 @@
             class="Majora\Component\OAuth\Loader\ORM\AccessTokenLoader"
         >
             <argument type="service" id="majora.oauth.access_token.orm_repository" />
+            <argument type="service" id="majora.clock" />
         </service>
 
         <service id="majora.oauth.access_token.orm_repository" public="false"
@@ -33,6 +34,7 @@
             class="Majora\Component\OAuth\Loader\ORM\RefreshTokenLoader"
         >
             <argument type="service" id="majora.oauth.refresh_token.orm_repository" />
+            <argument type="service" id="majora.clock" />
         </service>
 
         <service id="majora.oauth.refresh_token.orm_repository" public="false"

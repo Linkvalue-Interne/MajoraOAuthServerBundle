@@ -55,6 +55,17 @@ class Application implements ApplicationInterface, CollectionableInterface
     protected $accounts;
 
     /**
+     * @see NormalizableInterface::getScope()
+     */
+    public static function getScopes()
+    {
+        return array(
+            'id' => 'id',
+            'default' => array('id', 'domain', 'allowed_scopes'),
+        );
+    }
+
+    /**
      * Construct.
      */
     public function __construct()
@@ -218,10 +229,5 @@ class Application implements ApplicationInterface, CollectionableInterface
     public function setAccounts($accounts)
     {
         $this->accounts = $accounts;
-    }
-
-    public static function getScopes()
-    {
-        return array();
     }
 }

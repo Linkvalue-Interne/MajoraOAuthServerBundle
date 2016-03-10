@@ -12,7 +12,7 @@ class ApplicationCollection extends EntityCollection
     /**
      * @see Majora\Framework\Model\EntityCollection::getEntityClass()
      */
-    protected function getEntityClass()
+    protected static function getEntityClass()
     {
         return Application::class;
     }
