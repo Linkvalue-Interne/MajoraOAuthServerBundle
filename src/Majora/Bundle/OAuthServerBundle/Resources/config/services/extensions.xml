@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!-- Password grant extension -->
+        <service id="majora.oauth.grant_extension.password" public="false"
+            class="Majora\Component\OAuth\GrantType\PasswordGrantExtension"
+        >
+            <argument type="service" id="majora.oauth.account.loader" />
+            <argument type="service" id="security.password_encoder"></argument>
+        </service>
+
+        <!-- Refresh token grant extension -->
+        <service id="majora.oauth.grant_extension.refresh_token" public="false"
+            class="Majora\Component\OAuth\GrantType\RefreshTokenGrantExtension"
+        >
+            <argument type="service" id="majora.oauth.account.loader" />
+            <argument type="service" id="majora.oauth.refresh_token.loader" />
+        </service>
+
+    </services>
+
+</container>

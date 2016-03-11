@@ -30,20 +30,16 @@
     ],
     "autoload": {
         "psr-4": {
-            "Majora\\OAuthServerBundle\\": ""
+            "Majora\\Bundle\\": "src/Majora/Bundle",
+            "Majora\\Component\\": "src/Majora/Component"
         }
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.9",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "~5.1"
     },
     "require": {
-        "php": ">=5.5.9",
-        "bshaffer/oauth2-server-php": "^1.8",
-        "symfony/http-kernel": ">=2.8",
-        "symfony/dependency-injection": ">=2.8",
-        "symfony/config": ">=2.8",
-        "symfony/framework-bundle": ">=2.8"
-    },
-    "minimum-stability": "stable"
+        "php": ">=5.6",
+        "majora/framework-extra-bundle": "~1.1"
+    }
 }

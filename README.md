@@ -1,32 +1,47 @@
 # MajoraOAuthServerBundle
 
-## Implementation example
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/beb6e229-e98c-4df6-a894-2586a64418cc/mini.png)](https://insight.sensiolabs.com/projects/beb6e229-e98c-4df6-a894-2586a64418cc) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/LinkValue/MajoraOAuthServerBundle/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/LinkValue/MajoraOAuthServerBundle/?branch=develop) [![Build Status](https://travis-ci.org/LinkValue/MajoraOAuthServerBundle.svg?branch=develop)](https://travis-ci.org/LinkValue/MajoraOAuthServerBundle) [![Code Coverage](https://scrutinizer-ci.com/g/LinkValue/MajoraOAuthServerBundle/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/LinkValue/MajoraOAuthServerBundle/?branch=develop) [![Total Downloads](https://poser.pugx.org/majora/oauth-server-bundle/downloads)](https://packagist.org/packages/majora/oauth-server-bundle) [![Latest Stable Version](https://poser.pugx.org/majora/oauth-server-bundle/v/stable)](https://packagist.org/packages/majora/oauth-server-bundle) [![License](https://poser.pugx.org/majora/oauth-server-bundle/license)](https://packagist.org/packages/majora/oauth-server-bundle)
 
-### TokenController
+Provides a lightweight, extensive and highly customizable OAuth Server as a Symfony Bundle.
 
-```php
-<?php
+Features included :
 
-namespace AppBundle\Controller;
+* Domain Driven Design approch
+* Entity models and basic implementation for authenticated accounts, applications and access tokens
+* Full abstraction of loading / persisting entities of any kind
+* Generic extension system of custom grant types integration
+* Server service which grants access tokens with "password" credentials
+* Refresh token generation and grant extension
+* Doctrine ORM driver
 
-use OAuth2\Server;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+Features to come in v2.2 :
 
-class TokenController extends Controller
-{
-    public function postAction(Request $request)
-    {
-        /** @var Server $server */
-        $server = $this->get('oauth2.server');
+* Documentation
+* Unit tests
+* In memory & Redis drivers
+* Lightweight configurations
+* client_credentials grant type extension
 
-        $request = \Majora\OAuthServerBundle\Bridge\Request::createFromRequest($request);
-        /** @var \Majora\OAuthServerBundle\Bridge\Response $response */
-        $response = $this->get('oauth2.response');
+**Note** : version 2.x is totally work in progress, many classes, interfaces and services can be modified without deprecation step.
 
-        return $server->handleTokenRequest($request, $response);
-    }
-}
+**Caution** : this bundle purpose is to be used in REST API centric projets, not for standard web. For this purpose, we recommend [FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle), a full featured OAuth server.
 
-```
+## Documentation
 
+* [Read the Documentation for v1.0](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/v1.0/README.md)
+* [Read the Documentation for v2.x](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/develop/src/Majora/Bundle/OAuthServerBundle/Resources/doc/index.md)
+
+## Installation
+
+All the installation instructions are located in the documentation.
+
+## License
+
+This bundle is under the MIT license. See the complete license :
+
+    LICENSE
+
+## Credits
+
+- [Quentin Cerny](https://github.com/Nyxis), [Link Value](http://link-value.fr/), and [all contributors](https://github.com/LinkValue/MajoraOAuthServerBundle/contributors)
+- Inspired by [FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)

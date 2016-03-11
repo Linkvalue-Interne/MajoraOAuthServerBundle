@@ -1,0 +1,33 @@
+Majora\Component\OAuth\Entity\Token:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: token_type
+        type: string
+    discriminatorMap:
+        access_token: AccessToken
+        refresh_token: RefreshToken
+    table: majora_oauth_token
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        hash:
+            type: string
+            length: 128
+        expireIn:
+            type: integer
+        expireAt:
+            type: datetime
+    manyToOne:
+        account:
+            targetEntity: Majora\Component\OAuth\Model\AccountInterface
+            joinColumn:
+                name: account_id
+                referencedColumnName: id
+        application:
+            targetEntity: Majora\Component\OAuth\Model\ApplicationInterface
+            joinColumn:
+                name: application_id
+                referencedColumnName: id

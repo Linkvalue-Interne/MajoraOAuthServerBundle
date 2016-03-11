@@ -1,0 +1,3 @@
+oauth_api_token:
+    resource: routing/token.yml
+    prefix: /token

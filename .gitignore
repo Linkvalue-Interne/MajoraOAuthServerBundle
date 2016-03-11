@@ -1,2 +1,3 @@
-# Composer
 /vendor
+/bin
+/tests-coverage
