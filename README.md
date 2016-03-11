@@ -4,19 +4,23 @@
 
 Provides a lightweight, extensive and highly customizable OAuth Server as a Symfony Bundle.
 
-Features include :
+Features included :
 
 * Domain Driven Design approch
 * Entity models and basic implementation for authenticated accounts, applications and access tokens
 * Full abstraction of loading / persisting entities of any kind
 * Generic extension system of custom grant types integration
 * Server service which grants access tokens with "password" credentials
+* Refresh token generation and grant extension
+* Doctrine ORM driver
 
-Features to come in v2.x :
+Features to come in v2.2 :
 
-* In memory, Filer, Redis & Doctrine drivers
-* Anonymous grant type extension
-* Refresh token generation and grant type
+* Documentation
+* Unit tests
+* In memory & Redis drivers
+* Lightweight configurations
+* client_credentials grant type extension
 
 **Note** : version 2.x is totally work in progress, many classes, interfaces and services can be modified without deprecation step.
 
@@ -25,7 +29,7 @@ Features to come in v2.x :
 ## Documentation
 
 * [Read the Documentation for v1.0](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/v1.0/README.md)
-* [Read the Documentation for v2.x](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/master/src/Majora/Bundle/OAuthServerBundle/Resources/doc/index.md)
+* [Read the Documentation for v2.x](https://github.com/LinkValue/MajoraOAuthServerBundle/blob/develop/src/Majora/Bundle/OAuthServerBundle/Resources/doc/index.md)
 
 ## Installation
 

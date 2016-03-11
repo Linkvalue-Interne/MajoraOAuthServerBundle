@@ -3,9 +3,10 @@
 namespace Majora\Bundle\OAuthServerBundle\Controller;
 
 use Majora\Bundle\FrameworkExtraBundle\Controller\RestApiControllerTrait;
+use Majora\Component\OAuth\Exception\InvalidGrantException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Controller for oAuth tokens web cases.
@@ -23,20 +24,14 @@ class TokenApiController extends Controller
      */
     public function postAction(Request $request)
     {
-        // UndefinedOptionsException
-        // MissingOptionsException
-
-        // $badRequestException = $this->createJsonBadRequestResponse();
-        // $accessDeniedException = new AccessDeniedHttpException();
-
-        // try {
-            $accessToken = $this->get('oauth.server')->grant(
+        try {
+            return $this->createJsonResponse($this->get('oauth.server')->grant(
                 $this->getRequestData($request, 'snakelize')
-            );
-        // } catch (\Exception $e) {
-
-        // }
-
-        return $this->createJsonResponse($accessToken);
+            ));
+        } catch (InvalidGrantException $e) {
+            return new JsonResponse('Unavailable to create access token : bad credentials.', 401);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse('Invalid or missing fields for grant type.', 400);
+        }
     }
 }
