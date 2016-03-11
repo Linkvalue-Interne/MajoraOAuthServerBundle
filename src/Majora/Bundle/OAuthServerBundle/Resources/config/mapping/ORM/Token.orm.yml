@@ -14,8 +14,7 @@ Majora\Component\OAuth\Entity\Token:
             generator: { strategy: AUTO }
     fields:
         hash:
-            type: string
-            length: 128
+            type: text
         expireIn:
             type: integer
         expireAt:
