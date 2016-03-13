@@ -53,7 +53,8 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
 
             // token through headers
             case $request->headers->has('Authorization') :
-                if (!preg_match('#^Bearer ([\w]+)$#', $request->headers->get('Authorization'), $matches)) {
+                $accessTokenPattern = '[\w--_]+';
+                if (!preg_match(sprintf('#^Bearer (%s)$#', $accessTokenPattern), $request->headers->get('Authorization'), $matches)) {
                     break; // bad Authorization format
                 }
 
