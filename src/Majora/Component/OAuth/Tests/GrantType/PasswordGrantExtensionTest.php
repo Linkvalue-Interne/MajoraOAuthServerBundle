@@ -69,10 +69,6 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGrantFailingAccountLoading()
     {
-        // Mocking AccountInterface
-        /** @var AccountInterface $account */
-        $account = $this->prophesize(AccountInterface::class)->reveal();
-
         // Mocking AccountLoaderInterface
         $accountLoaderMock = $this->prophesize(AccountLoaderInterface::class);
         $accountLoaderMock->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')->willReturn(null)->shouldBeCalled();
@@ -133,7 +129,7 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
         /** @var LoginAttempt $loginAttempt */
         $loginAttempt = $loginAttemptMock->reveal();
         $this->expectException(InvalidGrantException::class);
-        
+
         $passwordGrantExtension->grant($application, $loginAttempt);
     }
 }
