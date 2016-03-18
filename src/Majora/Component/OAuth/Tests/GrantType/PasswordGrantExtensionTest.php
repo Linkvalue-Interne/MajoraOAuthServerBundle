@@ -46,48 +46,39 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
     public function testSuccessGrant()
     {
         // Mocking AccountInterface
-        /** @var AccountInterface $account */
         $account = $this->prophesize(AccountInterface::class)->reveal();
 
-        // Mocking AccountLoaderInterface
-        $accountLoaderMock = $this->prophesize(AccountLoaderInterface::class);
-        $accountLoaderMock
-            ->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
+        // Mocking AccountLoader
+        $accountLoader = $this->prophesize(AccountLoaderInterface::class);
+        $accountLoader->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
             ->willReturn($account)
             ->shouldBeCalled();
-        /** @var AccountLoaderInterface $accountLoader */
-        $accountLoader = $accountLoaderMock->reveal();
 
         // Mocking UserPasswordEncoderInterface
-        $userPasswordEncoderMock = $this->prophesize(UserPasswordEncoderInterface::class);
-        $userPasswordEncoderMock
-            ->isPasswordValid(Argument::type(UserInterface::class), 'password_test')
+        $userPasswordEncoder = $this->prophesize(UserPasswordEncoderInterface::class);
+        $userPasswordEncoder->isPasswordValid(Argument::type(UserInterface::class), 'password_test')
             ->willReturn(true)
             ->shouldBeCalled();
-        /** @var UserPasswordEncoderInterface $userPasswordEncoder */
-        $userPasswordEncoder = $userPasswordEncoderMock->reveal();
 
-        $passwordGrantExtension = new PasswordGrantExtension($accountLoader, $userPasswordEncoder);
-
-        // Mocking ApplicationInterface
-        $applicationMock = $this->prophesize(ApplicationInterface::class);
-        /** @var ApplicationInterface $application */
-        $application = $applicationMock->reveal();
+        $passwordGrantExtension = new PasswordGrantExtension(
+            $accountLoader->reveal(),
+            $userPasswordEncoder->reveal()
+        );
 
         // Mocking LoginAttempt
-        $loginAttemptMock = $this->prophesize(LoginAttempt::class);
-        $loginAttemptMock
-            ->getData('username')
+        $loginAttempt = $this->prophesize(LoginAttempt::class);
+        $loginAttempt->getData('username')
             ->willReturn('username_test')
             ->shouldBeCalled();
-        $loginAttemptMock
-            ->getData('password')
+        $loginAttempt->getData('password')
             ->willReturn('password_test')
             ->shouldBeCalled();
-        /** @var LoginAttempt $loginAttempt */
-        $loginAttempt = $loginAttemptMock->reveal();
 
-        $actualAccount = $passwordGrantExtension->grant($application, $loginAttempt);
+        $actualAccount = $passwordGrantExtension->grant(
+            $this->prophesize(ApplicationInterface::class)->reveal(),
+            $loginAttempt->reveal()
+        );
+
         $this->assertSame($account, $actualAccount);
     }
 
@@ -96,38 +87,29 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGrantFailingAccountLoading()
     {
-        // Mocking AccountLoaderInterface
-        $accountLoaderMock = $this->prophesize(AccountLoaderInterface::class);
-        $accountLoaderMock
-            ->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
+        // Mocking AccountLoader
+        $accountLoader = $this->prophesize(AccountLoaderInterface::class);
+        $accountLoader->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
             ->willReturn(null)
             ->shouldBeCalled();
-        /** @var AccountLoaderInterface $accountLoader */
-        $accountLoader = $accountLoaderMock->reveal();
 
-        // Mocking UserPasswordEncoderInterface
-        $userPasswordEncoderMock = $this->prophesize(UserPasswordEncoderInterface::class);
-        /** @var UserPasswordEncoderInterface $userPasswordEncoder */
-        $userPasswordEncoder = $userPasswordEncoderMock->reveal();
-
-        $passwordGrantExtension = new PasswordGrantExtension($accountLoader, $userPasswordEncoder);
-
-        // Mocking ApplicationInterface
-        $applicationMock = $this->prophesize(ApplicationInterface::class);
-        /** @var ApplicationInterface $application */
-        $application = $applicationMock->reveal();
+        $passwordGrantExtension = new PasswordGrantExtension(
+            $accountLoader->reveal(),
+            $this->prophesize(UserPasswordEncoderInterface::class)->reveal()
+        );
 
         // Mocking LoginAttempt
-        $loginAttemptMock = $this->prophesize(LoginAttempt::class);
-        $loginAttemptMock
-            ->getData('username')
+        $loginAttempt = $this->prophesize(LoginAttempt::class);
+        $loginAttempt->getData('username')
             ->willReturn('username_test')
             ->shouldBeCalled();
-        /** @var LoginAttempt $loginAttempt */
-        $loginAttempt = $loginAttemptMock->reveal();
 
         $this->expectException(InvalidGrantException::class);
-        $passwordGrantExtension->grant($application, $loginAttempt);
+
+        $passwordGrantExtension->grant(
+            $this->prophesize(ApplicationInterface::class)->reveal(),
+            $loginAttempt->reveal()
+        );
     }
 
     /**
@@ -135,49 +117,38 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGrantFailingPasswordValidation()
     {
-        // Mocking AccountInterface
-        /** @var AccountInterface $account */
-        $account = $this->prophesize(AccountInterface::class)->reveal();
-
-        // Mocking AccountLoaderInterface
-        $accountLoaderMock = $this->prophesize(AccountLoaderInterface::class);
-        $accountLoaderMock
-            ->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
-            ->willReturn($account)
+        // Mocking AccountLoader
+        $accountLoader = $this->prophesize(AccountLoaderInterface::class);
+        $accountLoader->retrieveOnApplicationByUsername(Argument::type(ApplicationInterface::class), 'username_test')
+            ->willReturn($this->prophesize(AccountInterface::class)->reveal())
             ->shouldBeCalled();
-        /** @var AccountLoaderInterface $accountLoader */
-        $accountLoader = $accountLoaderMock->reveal();
 
         // Mocking UserPasswordEncoderInterface
-        $userPasswordEncoderMock = $this->prophesize(UserPasswordEncoderInterface::class);
-        $userPasswordEncoderMock
-            ->isPasswordValid(Argument::type(UserInterface::class), 'password_test')
+        $userPasswordEncoder = $this->prophesize(UserPasswordEncoderInterface::class);
+        $userPasswordEncoder->isPasswordValid(Argument::type(UserInterface::class), 'password_test')
             ->willReturn(false)
             ->shouldBeCalled();
-        /** @var UserPasswordEncoderInterface $userPasswordEncoder */
-        $userPasswordEncoder = $userPasswordEncoderMock->reveal();
 
-        $passwordGrantExtension = new PasswordGrantExtension($accountLoader, $userPasswordEncoder);
-
-        // Mocking ApplicationInterface
-        $applicationMock = $this->prophesize(ApplicationInterface::class);
-        /** @var ApplicationInterface $application */
-        $application = $applicationMock->reveal();
+        $passwordGrantExtension = new PasswordGrantExtension(
+            $accountLoader->reveal(),
+            $userPasswordEncoder->reveal()
+        );
 
         // Mocking LoginAttempt
-        $loginAttemptMock = $this->prophesize(LoginAttempt::class);
-        $loginAttemptMock
-            ->getData('username')
+        $loginAttempt = $this->prophesize(LoginAttempt::class);
+        $loginAttempt->getData('username')
             ->willReturn('username_test')
             ->shouldBeCalled();
-        $loginAttemptMock
-            ->getData('password')
+        $loginAttempt->getData('password')
             ->willReturn('password_test')
             ->shouldBeCalled();
-        /** @var LoginAttempt $loginAttempt */
-        $loginAttempt = $loginAttemptMock->reveal();
+
+
         $this->expectException(InvalidGrantException::class);
 
-        $passwordGrantExtension->grant($application, $loginAttempt);
+        $passwordGrantExtension->grant(
+            $this->prophesize(ApplicationInterface::class)->reveal(),
+            $loginAttempt->reveal()
+        );
     }
 }
