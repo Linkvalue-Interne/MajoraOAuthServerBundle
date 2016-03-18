@@ -36,6 +36,18 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test getScopes() method.
+     */
+    public function testScopes()
+    {
+        $expectedScopes = [
+            'id' => 'id',
+            'default' => ['id', 'owner_id', 'username'],
+        ];
+        $this->assertEquals($expectedScopes, $this->account->getScopes(), '', 0.0, 10, true);
+    }
+
+    /**
      * Test the ownerId property.
      */
     public function testOwnerId()
