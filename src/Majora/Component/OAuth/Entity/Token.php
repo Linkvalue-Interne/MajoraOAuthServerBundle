@@ -48,7 +48,7 @@ abstract class Token implements TokenInterface
     public function __construct(
         ApplicationInterface $application,
         AccountInterface $account = null,
-        $expireIn = TokenInterface::DEFAULT_TTL,
+        $expireIn = null,
         \DateTime $expireAt = null,
         $hash = null
     ) {
@@ -58,7 +58,7 @@ abstract class Token implements TokenInterface
         $this->expireAt = $expireAt ?: \DateTime::createFromFormat('U', time() + intval($expireIn));
 
         $this->hash = $hash ?: (new MessageDigestPasswordEncoder())->encodePassword(
-            sprintf('[%s\o/%s]', $application->getSecret(), $account->getPassword() ?: time()),
+            sprintf('[%s\o/%s]', $application->getSecret(), $account ? $account->getPassword() : time()),
             uniqid(mt_rand(), true)
         );
     }
