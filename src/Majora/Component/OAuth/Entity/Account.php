@@ -183,9 +183,13 @@ class Account implements AccountInterface, CollectionableInterface
 
     /**
      * @param array $applications
+     *
+     * @return self
      */
     public function setApplications($applications)
     {
         $this->applications = $applications;
+
+        return $this;
     }
 }
