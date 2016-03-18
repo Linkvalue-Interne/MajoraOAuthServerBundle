@@ -105,6 +105,7 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
             ->shouldBeCalled();
 
         $this->expectException(InvalidGrantException::class);
+        $this->expectExceptionMessage('Username not found on loaded application.');
 
         $passwordGrantExtension->grant(
             $this->prophesize(ApplicationInterface::class)->reveal(),
@@ -145,6 +146,7 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
 
 
         $this->expectException(InvalidGrantException::class);
+        $this->expectExceptionMessage('Invalid password for loaded account.');
 
         $passwordGrantExtension->grant(
             $this->prophesize(ApplicationInterface::class)->reveal(),
