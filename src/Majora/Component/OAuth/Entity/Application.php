@@ -225,9 +225,13 @@ class Application implements ApplicationInterface, CollectionableInterface
 
     /**
      * @param array $accounts
+     *
+     * @return self
      */
     public function setAccounts($accounts)
     {
         $this->accounts = $accounts;
+
+        return $this;
     }
 }
