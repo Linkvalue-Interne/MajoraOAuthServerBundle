@@ -17,6 +17,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Test configureRequestParameters() method.
+     */
     public function testConfigureRequestParameters()
     {
         $optionsResolver = new OptionsResolver();
@@ -31,6 +34,9 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedDefinedOptions, $actualDefinedOptions, '', $delta = 0.0, 10, true); // Not caring about keys
     }
 
+    /**
+     * Test grant() method on success
+     */
     public function testSuccessGrant()
     {
         // Mocking AccountInterface
@@ -67,6 +73,9 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($account, $actualAccount);
     }
 
+    /**
+     * Test grant() when it fails loading an account.
+     */
     public function testGrantFailingAccountLoading()
     {
         // Mocking AccountLoaderInterface
@@ -97,6 +106,9 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
         $passwordGrantExtension->grant($application, $loginAttempt);
     }
 
+    /**
+     * Test grant() when it fails to validate the password.
+     */
     public function testGrantFailingPasswordValidation()
     {
         // Mocking AccountInterface
