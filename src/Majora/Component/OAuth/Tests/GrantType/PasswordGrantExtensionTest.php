@@ -29,9 +29,9 @@ class PasswordGrantExtensionTest extends \PHPUnit_Framework_TestCase
         );
         $passwordGrantExtension->configureRequestParameters($optionsResolver);
 
-        $actualDefinedOptions = $optionsResolver->getRequiredOptions();
-        $expectedDefinedOptions = ['password', 'username'];
-        $this->assertEquals($expectedDefinedOptions, $actualDefinedOptions, '', $delta = 0.0, 10, true); // Not caring about keys
+        $actualRequiredOptions = $optionsResolver->getRequiredOptions();
+        $expectedRequiredOptions = ['password', 'username'];
+        $this->assertEquals($expectedRequiredOptions, $actualRequiredOptions, '', $delta = 0.0, 10, true); // Not caring about keys
     }
 
     /**
