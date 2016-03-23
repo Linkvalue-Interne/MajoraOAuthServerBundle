@@ -8,14 +8,14 @@ use Majora\Component\OAuth\Model\ApplicationInterface;
 use Majora\Component\OAuth\Model\RefreshTokenInterface;
 use Majora\Framework\Model\CollectionableInterface;
 use Majora\Framework\Model\CollectionableTrait;
-use Majora\Framework\Serializer\Model\SerializableTrait;
+use Majora\Framework\Normalizer\Model\NormalizableTrait;
 
 /**
  * Access token class.
  */
 class AccessToken extends Token implements AccessTokenInterface, CollectionableInterface
 {
-    use CollectionableTrait, SerializableTrait;
+    use CollectionableTrait, NormalizableTrait;
 
     /**
      * @var RefreshTokenInterface
