@@ -40,7 +40,7 @@
     },
     "require": {
         "php": ">=5.6",
-        "majora/framework-extra-bundle": "dev-master"
+        "majora/framework-extra-bundle": "dev-release-v1.3"
     },
     "minimum-stability": "dev"
 }
