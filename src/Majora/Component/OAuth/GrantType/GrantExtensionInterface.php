@@ -24,7 +24,7 @@ interface GrantExtensionInterface
      * @param ApplicationInterface $application
      * @param LoginAttempt         $loginAttempt
      *
-     * @return AccountInterface
+     * @return AccountInterface|null
      *
      * @throws InvalidGrantException
      */

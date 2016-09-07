@@ -22,6 +22,12 @@
             <argument type="service" id="majora.oauth.refresh_token.loader" />
         </service>
 
-    </services>
+        <!-- Client credentials grant extension -->
+        <service id="majora.oauth.grant_extension.client_credentials" public="false"
+                 class="Majora\Component\OAuth\GrantType\ClientCredentialsGrantExtension"
+        >
+        </service>
+
+</services>
 
 </container>

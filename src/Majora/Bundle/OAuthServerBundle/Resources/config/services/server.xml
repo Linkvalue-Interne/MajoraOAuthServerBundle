@@ -23,6 +23,7 @@
             <argument type="collection">
                 <argument key="password" type="service" id="majora.oauth.grant_extension.password" />
                 <argument key="refresh_token" type="service" id="majora.oauth.grant_extension.refresh_token" />
+                <argument key="client_credentials" type="service" id="majora.oauth.grant_extension.client_credentials" />
             </argument>
         </service>
         <service id="oauth.server" alias="majora.oauth.server" />

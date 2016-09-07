@@ -51,7 +51,7 @@ class AccessToken extends Token implements AccessTokenInterface, CollectionableI
     public static function getScopes()
     {
         return array(
-            'default' => array('id', 'hash', 'expire_in', 'refresh_token', 'application@id', 'account@id'),
+            'default' => array('id', 'hash', 'expire_in', 'refresh_token', 'application@id', 'account@id?'),
         );
     }
 }
