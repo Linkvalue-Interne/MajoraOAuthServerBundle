@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!-- Access Token -->
+        <service id="majora.oauth.access_token.in_memory_loader" public="false"
+                 class="Majora\Component\OAuth\Loader\InMemory\AccessTokenLoader"
+        >
+            <argument type="service" id="Majora\Component\OAuth\Entity\AccessTokenCollection"/>
+            <argument type="service" id="Majora\Framework\Normalizer\MajoraNormalizer"/>
+            <argument type="service" id="majora.clock"/>
+        </service>
+
+        <!-- Refresh Token -->
+        <service id="majora.oauth.refresh_token.in_memory_loader" public="false"
+                 class="Majora\Component\OAuth\Loader\InMemory\RefreshTokenLoader"
+        >
+            <argument type="service" id="Majora\Component\OAuth\Entity\RefreshTokenCollection"/>
+            <argument type="service" id="Majora\Framework\Normalizer\MajoraNormalizer"/>
+        </service>
+
+        <!-- Application -->
+        <service id="majora.oauth.application.in_memory_loader" public="false"
+                 class="Majora\Component\OAuth\Loader\InMemory\ApplicationLoader"
+        >
+            <argument type="service" id="Majora\Component\OAuth\Entity\ApplicationCollection"/>
+            <argument type="service" id="Majora\Framework\Normalizer\MajoraNormalizer"/>
+        </service>
+
+        <!-- Account -->
+        <service id="majora.oauth.account.in_memory_loader" public="false"
+                 class="Majora\Component\OAuth\Loader\InMemory\AccountLoader"
+        >
+            <argument type="service" id="Majora\Component\OAuth\Entity\AccountCollection"/>
+            <argument type="service" id="Majora\Framework\Normalizer\MajoraNormalizer"/>
+        </service>
+
+    </services>
+
+</container>

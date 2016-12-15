@@ -16,11 +16,11 @@ class TokenApiController extends Controller
     use RestApiControllerTrait;
 
     /**
-     * Create a new access_token from given request throught oAuth server.
+     * Create a new access_token from given request through oAuth server.
      *
      * @param Request $request
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response;
      */
     public function postAction(Request $request)
     {

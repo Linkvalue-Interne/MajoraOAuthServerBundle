@@ -34,6 +34,7 @@ class MajoraOAuthServerExtension extends Extension
         $loader->load('extensions.xml');
         $loader->load('empty.xml');
         $loader->load('orm.xml');
+        $loader->load('in_memory.xml');
 
         if (!$container->hasDefinition('majora.oauth.server')) {
             return;

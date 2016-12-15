@@ -54,6 +54,13 @@ class Configuration implements ConfigurationInterface
                         ->append($this->createDriverStrategyNode('repository'))
                     ->end()
                 ->end()
+                ->arrayNode('in_memory')
+                    ->children()
+                        ->prototype('array')
+                            ->append($this->createInMemoryNode('accounts'))
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

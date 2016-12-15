@@ -25,7 +25,7 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
     protected $oauthServer;
 
     /**
-     * @var AccessTokenInterface
+     * @var \Majora\Component\OAuth\Model\AccessTokenInterface
      */
     protected $currentAccessToken;
 
