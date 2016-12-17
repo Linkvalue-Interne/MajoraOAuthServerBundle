@@ -5,14 +5,14 @@ namespace Majora\Component\OAuth\Entity;
 use Majora\Component\OAuth\Model\ApplicationInterface;
 use Majora\Framework\Model\CollectionableInterface;
 use Majora\Framework\Model\CollectionableTrait;
-use Majora\Framework\Serializer\Model\SerializableTrait;
+use Majora\Framework\Normalizer\Model\NormalizableTrait;
 
 /**
  * Basic implementation on ApplicationInterface.
  */
 class Application implements ApplicationInterface, CollectionableInterface
 {
-    use CollectionableTrait, SerializableTrait;
+    use CollectionableTrait, NormalizableTrait;
 
     /**
      * @var int
@@ -225,9 +225,13 @@ class Application implements ApplicationInterface, CollectionableInterface
 
     /**
      * @param array $accounts
+     *
+     * @return self
      */
     public function setAccounts($accounts)
     {
         $this->accounts = $accounts;
+
+        return $this;
     }
 }
